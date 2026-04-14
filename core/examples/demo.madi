@@ -1,4 +1,9 @@
+entity: User
 intent: register_user
 path: /api/signup
 method: POST
 inputs: (name, email, password)
+
+steps:
+    validate email
+    create user
