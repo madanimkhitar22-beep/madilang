@@ -2,12 +2,14 @@ class MadiParser:
     def __init__(self, source_code: str):
         self.lines = source_code.strip().split("\n")
         self.result = {
-            "entity": None,
-            "intent": None,
-            "path": None,
-            "method": "POST",
-            "inputs": [],
-            "steps": []
+            {
+    "entity": "User",
+    "intent": "register_user",
+    "path": "/api/signup",
+    "method": "POST",
+    "inputs": [...],
+    "steps": [...]
+            }
         }
         self.in_steps = False
 
