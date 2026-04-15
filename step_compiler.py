@@ -36,7 +36,9 @@ class StepCompiler:
 
         line = line.strip()
 
+        # =========================
         # 🔍 FIND ENTITY
+        # =========================
         match = re.match(r'find (\w+) by (\w+) as (\w+)', line)
         if match:
             return {
@@ -46,7 +48,9 @@ class StepCompiler:
                 "as": match.group(3)
             }
 
+        # =========================
         # ❗ IF EXISTS
+        # =========================
         match = re.match(r'if (\w+) exists', line)
         if match:
             return {
@@ -54,7 +58,9 @@ class StepCompiler:
                 "var": match.group(1)
             }
 
+        # =========================
         # ❗ IF NOT FOUND
+        # =========================
         match = re.match(r'if (\w+) not found', line)
         if match:
             return {
@@ -62,7 +68,9 @@ class StepCompiler:
                 "var": match.group(1)
             }
 
+        # =========================
         # 🔐 PASSWORD MISMATCH
+        # =========================
         match = re.match(r'if password does not match (\w+)\.(\w+)', line)
         if match:
             return {
@@ -71,13 +79,57 @@ class StepCompiler:
                 "field": match.group(2)
             }
 
-        # 🧱 CREATE USER
-        if line.startswith("create user"):
+        # =========================
+        # 🔐 VERIFY PASSWORD (explicit)
+        # =========================
+        if line.startswith("verify password"):
             return {
-                "type": "create_user"
+                "type": "verify_password"
             }
 
+        # =========================
+        # 🧱 CREATE USER
+        # =========================
+        if line.startswith("create user"):
+            return {
+                "type": "create"
+            }
+
+        # =========================
+        # 🔐 LOGIN USER (optional abstraction)
+        # =========================
+        if line.startswith("login user"):
+            return {
+                "type": "login"
+            }
+
+        # =========================
+        # 🔐 GENERATE TOKEN
+        # =========================
+        if "generate token" in line:
+            return {
+                "type": "generate_token"
+            }
+
+        # =========================
+        # 🔐 JWT SUCCESS
+        # =========================
+        if line.startswith("return success with token"):
+            return {
+                "type": "jwt_success"
+            }
+
+        # =========================
+        # 🔐 PROTECT ROUTE
+        # =========================
+        if line.startswith("protect route"):
+            return {
+                "type": "protect_route"
+            }
+
+        # =========================
         # ❌ ERROR MESSAGE
+        # =========================
         match = re.match(r'show error "(.*?)"', line)
         if match:
             return {
@@ -85,52 +137,18 @@ class StepCompiler:
                 "message": match.group(1)
             }
 
+        # =========================
         # ✅ SUCCESS
+        # =========================
         if line.startswith("return success"):
             return {
                 "type": "success"
             }
 
+        # =========================
         # 🧩 RAW FALLBACK
+        # =========================
         return {
             "type": "raw",
             "value": line
         }
-
-# 🔐 LOGIN USER
-match = re.match(r'login user', line)
-if match:
-    return {
-        "type": "login"
-    }
-
-# 🔐 GENERATE TOKEN
-if "generate token" in line:
-    return {
-        "type": "generate_token"
-    }
-
-# 🔐 PROTECT ROUTE
-if "protect route" in line:
-    return {
-        "type": "protect_route"
-    }
-
-# 🔐 VERIFY PASSWORD
-if "verify password" in line:
-    return {
-        "type": "verify_password"
-    }
-
-# 🔐 GENERATE JWT TOKEN
-if line.startswith("return success with token"):
-    return {
-        "type": "jwt_success"
-    }
-
-# 🔐 PROTECT ROUTE
-if line.startswith("protect route with auth"):
-    return {
-        "type": "auth_protect"
-    }
-    
