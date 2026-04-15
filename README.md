@@ -1,122 +1,150 @@
-<!-- HEADER -->
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:0f0c29,50:302b63,100:24243e&height=200&section=header&text=MadiLang&fontSize=42&fontColor=00f2ff&animation=fadeIn&fontAlignY=38&desc=Intent-Driven%20Programming%20Language&descAlignY=58&descSize=18&descColor=a78bfa" />
+<!-- HERO HEADER -->
+<p align="center">
+  <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:0f0c29,50:302b63,100:24243e&height=220&section=header&text=MadiLang&fontSize=44&fontColor=00f2ff&animation=fadeIn" />
+</p>
 
-<div align="center">
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&pause=900&color=00F2FF&center=true&vCenter=true&width=900&lines=Turn+Intent+into+Real+Backend+Systems;No+Boilerplate+Code+Required;AI-like+Programming+Without+AI;From+Human+Language+→+Production+APIs" />
+</p>
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&pause=1000&color=00F2FF&center=true&vCenter=true&width=700&lines=From+Intent+to+Execution;Human+Language+→+Real+Systems;Zero+Boilerplate+Architecture;Security+by+Default" />
-
-<br/>
-
-![Status](https://img.shields.io/badge/Status-Experimental-00f2ff?style=for-the-badge)
-![Paradigm](https://img.shields.io/badge/Paradigm-Intent--Driven-6a0dad?style=for-the-badge)
-![Security](https://img.shields.io/badge/Security-Built--In-0f0c29?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-a78bfa?style=for-the-badge)
-
-</div>
-
----
-
-# 🧠 What is MadiLang?
-
-**MadiLang** is an experimental intent-driven programming language that transforms human-readable intent into fully functional software systems.
-
-Instead of writing implementation details, developers describe **what they want**, and MadiLang generates the rest.
-
-It can generate:
-
-- Backend APIs  
-- Databases  
-- Validation logic  
-- Authentication flows  
-- Security layers  
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Experimental-00f2ff?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Paradigm-Intent--Driven-6a0dad?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Type-Programming_Language-0f0c29?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/License-MIT-a78bfa?style=for-the-badge" />
+</p>
 
 ---
 
-# ⚙️ Core Philosophy
+# 🚀 What is MadiLang?
 
-## Traditional Programming
-You describe **how** to solve a problem.
+**MadiLang** is a next-generation **intent-driven programming language** that transforms human-readable instructions into fully working backend systems.
 
-## MadiLang
-You describe **what you want**, and the system determines **how to build it**.
+Instead of writing code, you describe **intent**, and MadiLang generates:
+
+- REST APIs
+- Authentication systems (JWT)
+- Database operations
+- Validation logic
+- Security layers
+
+> 💡 Think: *"What if backend development was written in human intent instead of code?"*
+
+---
+
+# ⚡ Why MadiLang Exists
+
+Traditional backend development requires:
+
+- Repetitive boilerplate
+- Manual validation
+- Authentication setup
+- Rewriting similar logic across projects
+
+### MadiLang changes this:
+
+| Traditional Dev | MadiLang |
+|----------------|----------|
+| Write logic manually | Describe intent |
+| Build auth system | Auto-generated |
+| Define DB queries | Auto-generated |
+| Handle validation | Built-in |
 
 ---
 
 # 🔥 Example
 
-## Input (MadiLang)
+## 🧾 Input (.madi)
 
 ```madi
-intent: create_new_user
+entity: User
+intent: register_user
 route: /api/signup
+method: POST
 inputs: (name, email, password)
 
 steps:
-    create user
     if email exists:
-        stop process
+        show error "Email already exists"
+
+    create user
+
+    return success with token
 ```
 
-## Output (Generated Backend - Node.js)
+---
+
+## ⚙️ Output (Generated Backend)
 
 ```ts
 app.post('/api/signup', async (req, res) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
-    return res.status(400).json({ error: 'Missing fields' });
+    return res.status(400).json({ error: "Missing fields" });
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const exists = await prisma.user.findUnique({
+    where: { email }
+  });
 
-  try {
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword
-      }
-    });
-
-    return res.status(201).json({ success: true, user });
-  } catch (error) {
-    return res.status(400).json({ error: 'User already exists' });
+  if (exists) {
+    return res.status(400).json({ error: "Email already exists" });
   }
+
+  const user = await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: await bcrypt.hash(password, 10)
+    }
+  });
+
+  const token = jwt.sign(
+    { id: user.id },
+    process.env.JWT_SECRET || "dev_secret",
+    { expiresIn: "7d" }
+  );
+
+  return res.json({
+    success: true,
+    token
+  });
 });
 ```
 
 ---
 
-# 🧬 Architecture
+# 🧠 Architecture
 
 ```
-Madi Source Code (.madi)
+MadiLang Source (.madi)
         ↓
-Intent Parser (Core Engine)
+Parser Engine (Multi-Intent)
         ↓
-Abstract Syntax Tree (AST)
+Step Compiler (IR Layer)
         ↓
-Code Generators
-   ├── Backend (Node.js / Rust)
-   ├── Database (Prisma / SQL)
-   ├── Security Layer (Hashing / Validation)
-   └── API Layer (Express / Actix)
+Code Generator
+   ├── API Generator (Express.js)
+   ├── Database Layer (Prisma)
+   ├── Auth Engine (JWT)
+   └── Middleware System
 ```
 
 ---
 
-# 🔒 Key Features
+# 🔐 Key Features
 
-## ⚡ Zero Boilerplate
-No manual API setup, schema design, or validation logic.
+### ⚡ Zero Boilerplate
+No setup. No repetitive code. Just intent.
 
-## 🛡 Security by Default
-- `password` → automatically hashed  
-- `unique` → enforced constraint  
-- timestamps → generated automatically  
+### 🛡 Built-in Security
+- Password hashing automatically handled
+- JWT generation built-in
+- Route protection via middleware engine
 
-## 🧠 Intent-Based Compilation
-The compiler interprets meaning, not just syntax.
+### 🧠 Intent-Based Compilation
+MadiLang understands meaning, not syntax.
 
 ---
 
@@ -125,7 +153,7 @@ The compiler interprets meaning, not just syntax.
 ```bash
 madi run app.madi
 madi build backend
-madi generate database
+madi compile project
 ```
 
 ---
@@ -136,11 +164,10 @@ madi generate database
 madilang/
  ├── core/
  │   ├── parser.py
- │   ├── ast.py
+ │   ├── step_compiler.py
  │
  ├── generator/
- │   ├── backend.ts
- │   ├── database.prisma
+ │   ├── api_generator.py
  │
  ├── cli/
  │   ├── runner.py
@@ -155,36 +182,39 @@ madilang/
 
 # 🌍 Vision
 
-MadiLang aims to shift software development from:
+MadiLang aims to redefine software development:
 
-**Implementation-centric programming → Intent-centric systems**
+> From writing code → to describing intent
 
 This reduces:
-
-- Complexity  
-- Boilerplate  
-- Human error  
-- Development time  
-
----
-
-# ⚠️ Project Status
-
-🚧 Early Experimental Stage (Pre-Alpha)
+- Complexity
+- Development time
+- Human error
+- Boilerplate overhead
 
 ---
 
-# 🚀 Roadmap
+# 🚧 Project Status
 
-- [ ] Rust backend generator  
-- [ ] AI-powered AST inference engine  
-- [ ] VS Code extension (Guardian LSP)  
-- [ ] Visual programming interface  
-- [ ] Distributed compilation system  
+**Experimental / Pre-Alpha**
+
+This project is actively evolving and is not production-ready yet.
 
 ---
 
-# 🤝 Contribution
+# 🗺 Roadmap
+
+- [x] Parser Engine
+- [x] Step Compiler (IR)
+- [x] JWT Authentication System
+- [ ] Database Schema Generator
+- [ ] AI Intent Optimization Engine
+- [ ] VS Code Extension
+- [ ] Visual Builder Interface
+
+---
+
+# 🤝 Contribute
 
 ```bash
 git clone https://github.com/your-repo/madilang
@@ -194,7 +224,19 @@ python core/main.py
 
 ---
 
+# ⭐ Why Star This Project?
+
+If you believe in:
+
+- Future of intent-based programming
+- AI-like abstraction in software
+- Removing boilerplate forever
+
+⭐ Star the repo and join the journey.
+
+---
+
 # 🧭 Final Statement
 
 > MadiLang is not just a programming language.  
-> It is a new abstraction layer between human intent and machine execution.
+> It is a new layer between human thinking and machine execution.
