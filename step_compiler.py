@@ -121,3 +121,10 @@ if "verify password" in line:
     return {
         "type": "verify_password"
     }
+
+# 🔐 GENERATE JWT TOKEN
+if line.startswith("return success with token"):
+    return {
+        "type": "jwt_success"
+    }
+    
