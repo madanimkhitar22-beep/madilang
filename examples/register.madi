@@ -1,0 +1,11 @@
+intent: register_user
+route: /api/signup
+method: POST
+inputs: (name, email, password)
+
+steps:
+    if email exists:
+        show error "Email already exists"
+        stop process
+
+    create user
