@@ -38,6 +38,58 @@ class MadiParser:
                 self.in_steps = True
 
             elif self.in_steps:
-                self.result["steps"].append(line.strip())
+                parsed = self.parse_step(line)
+                self.result["steps"].append(parsed)
 
         return self.result
+
+
+    def parse_step(self, line):
+        import re
+        line = line.strip()
+
+        match = re.match(r'find (\w+) by (\w+) as (\w+)', line)
+        if match:
+            return {
+                "type": "find",
+                "entity": match.group(1),
+                "field": match.group(2),
+                "var": match.group(3)
+            }
+
+        match = re.match(r'if (\w+) not found', line)
+        if match:
+            return {
+                "type": "if_not_found",
+                "var": match.group(1)
+            }
+
+        match = re.match(r'if (\w+) exists', line)
+        if match:
+            return {
+                "type": "if_exists",
+                "field": match.group(1)
+            }
+
+        match = re.match(r'if password does not match (\w+)\.(\w+)', line)
+        if match:
+            return {
+                "type": "password_mismatch",
+                "var": match.group(1),
+                "field": match.group(2)
+            }
+
+        if line.startswith("create user"):
+            return {"type": "create_user"}
+
+        match = re.match(r'show error "(.*?)"', line)
+        if match:
+            return {
+                "type": "error",
+                "message": match.group(1)
+            }
+
+        if line.startswith("return success"):
+            return {"type": "success"}
+
+        return {"type": "raw", "value": line}
