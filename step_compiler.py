@@ -96,3 +96,28 @@ class StepCompiler:
             "type": "raw",
             "value": line
         }
+
+# 🔐 LOGIN USER
+match = re.match(r'login user', line)
+if match:
+    return {
+        "type": "login"
+    }
+
+# 🔐 GENERATE TOKEN
+if "generate token" in line:
+    return {
+        "type": "generate_token"
+    }
+
+# 🔐 PROTECT ROUTE
+if "protect route" in line:
+    return {
+        "type": "protect_route"
+    }
+
+# 🔐 VERIFY PASSWORD
+if "verify password" in line:
+    return {
+        "type": "verify_password"
+    }
