@@ -38,6 +38,16 @@ steps = compiler.compile(self.data["steps"])
         code += "    return res.status(400).json({ error: 'Missing fields' });\n"
         code += "  }\n\n"
 
+        # 🔐 JWT SUCCESS
+elif t == "jwt_success":
+    code += "  const token = jwt.sign(\n"
+    code += "    { id: user.id },\n"
+    code += "    process.env.JWT_SECRET,\n"
+    code += "    { expiresIn: '7d' }\n"
+    code += "  );\n\n"
+
+    code += "  return res.json({ success: true, token });\n\n"
+
         # ----------------------------
         # STEPS ENGINE (AST + LEGACY)
         # ----------------------------
