@@ -1,0 +1,15 @@
+intent: login_user
+route: /api/login
+method: POST
+inputs: (email, password)
+
+steps:
+    find user by email as user
+
+    if user not found:
+        show error "User not found"
+
+    if password does not match user.password:
+        show error "Invalid password"
+
+    return success
