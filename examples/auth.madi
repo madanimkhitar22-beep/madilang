@@ -1,0 +1,38 @@
+entity: User
+fields:
+    - name: string
+    - email: string (unique)
+    - password: string (secure)
+    - createdAt: datetime (auto)
+
+---
+
+intent: register_user
+route: /api/signup
+method: POST
+inputs: (name, email, password)
+
+steps:
+    if email exists:
+        show error "Email already exists"
+        stop process
+
+    create user
+
+---
+
+intent: login_user
+route: /api/login
+method: POST
+inputs: (email, password)
+
+steps:
+    find user by email as user
+
+    if user not found:
+        show error "User not found"
+
+    if password does not match user.password:
+        show error "Invalid password"
+
+    return success
