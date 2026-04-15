@@ -127,4 +127,10 @@ if line.startswith("return success with token"):
     return {
         "type": "jwt_success"
     }
+
+# 🔐 PROTECT ROUTE
+if line.startswith("protect route with auth"):
+    return {
+        "type": "auth_protect"
+    }
     
