@@ -132,3 +132,42 @@ class APIGenerator:
         code += "app.listen(3000, () => console.log('MadiLang running'));\n"
 
         return code
+
+        elif step["type"] == "login":
+    code += """
+  const user = await prisma.user.findUnique({
+    where: { email }
+  });
+
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+"""
+
+elif step["type"] == "verify_password":
+    code += """
+  const valid = await bcrypt.compare(password, user.password);
+
+  if (!valid) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+"""
+
+elif step["type"] == "generate_token":
+    code += """
+  const token = jwt.sign(
+    { id: user.id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '24h' }
+  );
+"""
+
+elif step["type"] == "protect_route":
+    code += """
+  // Middleware: verify JWT required
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+"""
