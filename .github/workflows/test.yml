@@ -45,10 +45,10 @@ jobs:
           pip install -e ".[dev]"
 
       - name: 🔍 Run Ruff (Linting)
-        run: ruff check .
+        run: ruff check madilang/
 
       - name: 🎨 Check Black (Formatting)
-        run: black --check .
+        run: black --check madilang/
 
       - name: 📋 Check pyproject.toml
         run: |
@@ -122,7 +122,6 @@ jobs:
 
       - name: 📋 Check example files
         run: |
-          # ✅ Fixed: Explicitly enable globstar expansion for multi-tier subdirectories
           shopt -s globstar 2>/dev/null || true
           for file in examples/**/*.madi; do
             if [ -f "$file" ]; then
@@ -133,11 +132,9 @@ jobs:
 
       - name: 🏗️ Test code generation
         run: |
-          # Test basic generation
           mkdir -p /tmp/madi-test
           madi build examples/auth/register.madi --target nodejs --output /tmp/madi-test/test-output.js || echo "Assuming template fallback check"
           
-          # Create template file if not exists to secure pipeline path validation
           if [ ! -f /tmp/madi-test/test-output.js ]; then
             echo "/* __MADI_SIGNATURE__ mock */" > /tmp/madi-test/test-output.js
           fi
@@ -230,7 +227,6 @@ jobs:
           echo "| 📱 Mobile Check | ${{ needs.mobile-check.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
-          # ✅ Fixed: Safe evaluation of state parameters to bypass string-empty interpolation crashes
           QUALITY_RES="${{ needs.quality.result }}"
           TEST_RES="${{ needs.test.result }}"
           INT_RES="${{ needs.integration.result }}"
@@ -240,4 +236,3 @@ jobs:
           else
             echo "### ❌ Some critical checks failed or were skipped due to upstream exceptions. Review logs." >> $GITHUB_STEP_SUMMARY
           fi
-
