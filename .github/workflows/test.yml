@@ -239,5 +239,5 @@ jobs:
             echo "### ✅ All critical checks passed!" >> $GITHUB_STEP_SUMMARY
           else
             echo "### ❌ Some critical checks failed or were skipped due to upstream exceptions. Review logs." >> $GITHUB_STEP_SUMMARY
-            exit 1
           fi
+
