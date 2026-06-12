@@ -1,0 +1,210 @@
+{
+  "Entity Definition": {
+    "prefix": "entity",
+    "body": [
+      "entity: ${1:Name}",
+      "fields:",
+      "    - ${2:field}: ${3:string} (${4:unique})$0"
+    ],
+    "description": "Define a new entity with fields"
+  },
+  "Intent Definition": {
+    "prefix": "intent",
+    "body": [
+      "intent: ${1:name}",
+      "entity: ${2:Entity}",
+      "route: ${3:/api/path}",
+      "method: ${4|POST,GET,PUT,PATCH,DELETE|}",
+      "inputs: ($5)",
+      "",
+      "steps:",
+      "    $0"
+    ],
+    "description": "Define a new intent with route and steps"
+  },
+  "Field with Modifiers": {
+    "prefix": "field",
+    "body": [
+      "- ${1:name}: ${2:string} (${3|unique,secure,auto,optional|})$0"
+    ],
+    "description": "Add a field with modifiers"
+  },
+  "Secure Field": {
+    "prefix": "fsec",
+    "body": [
+      "- ${1:password}: string (secure)$0"
+    ],
+    "description": "Add a secure field (auto-hashed)"
+  },
+  "Unique Field": {
+    "prefix": "funi",
+    "body": [
+      "- ${1:email}: string (unique)$0"
+    ],
+    "description": "Add a unique field"
+  },
+  "Auto Timestamp Field": {
+    "prefix": "fauto",
+    "body": [
+      "- ${1:createdAt}: datetime (auto)$0"
+    ],    "description": "Add an auto-generated timestamp field"
+  },
+  "Find Step": {
+    "prefix": "find",
+    "body": [
+      "find ${1:Entity} by ${2:field} as ${3:var}$0"
+    ],
+    "description": "Find entity by field"
+  },
+  "Create Step": {
+    "prefix": "create",
+    "body": [
+      "create ${1:entity}$0"
+    ],
+    "description": "Create new entity instance"
+  },
+  "Update Step": {
+    "prefix": "update",
+    "body": [
+      "update ${1:entity}$0"
+    ],
+    "description": "Update entity instance"
+  },
+  "Delete Step": {
+    "prefix": "delete",
+    "body": [
+      "delete ${1:entity}$0"
+    ],
+    "description": "Delete entity instance"
+  },
+  "If Exists Step": {
+    "prefix": "ifex",
+    "body": [
+      "if ${1:field} exists:",
+      "    ${2:show error \"Already exists\"}$0"
+    ],
+    "description": "Conditional check if field exists"
+  },
+  "If Not Found Step": {
+    "prefix": "ifnf",
+    "body": [
+      "if ${1:var} not found:",
+      "    ${2:show error \"Not found\"}$0"
+    ],
+    "description": "Conditional check if variable not found"
+  },
+  "Password Check Step": {
+    "prefix": "ifpass",
+    "body": [
+      "if password does not match ${1:user}.password:",      "    show error \"Invalid credentials\"$0"
+    ],
+    "description": "Verify password match"
+  },
+  "Return Success": {
+    "prefix": "retok",
+    "body": [
+      "return success$0"
+    ],
+    "description": "Return success response"
+  },
+  "Return Success with Token": {
+    "prefix": "rettoken",
+    "body": [
+      "return success with token$0"
+    ],
+    "description": "Return success with JWT token"
+  },
+  "Return Error": {
+    "prefix": "reterr",
+    "body": [
+      "show error \"${1:Error message}\"$0"
+    ],
+    "description": "Return error response"
+  },
+  "Generate Token": {
+    "prefix": "gentoken",
+    "body": [
+      "generate token$0"
+    ],
+    "description": "Generate JWT token"
+  },
+  "Protect Route": {
+    "prefix": "auth",
+    "body": [
+      "protect route$0"
+    ],
+    "description": "Require authentication for route"
+  },
+  "Role Guard": {
+    "prefix": "role",
+    "body": [
+      "allow only ${1:admin}$0"
+    ],
+    "description": "Restrict access to specific role"
+  },
+  "Stop Process": {
+    "prefix": "stop",
+    "body": [
+      "stop process$0"    ],
+    "description": "Stop execution immediately"
+  },
+  "Full Auth Intent": {
+    "prefix": "intent:auth",
+    "body": [
+      "intent: ${1:login_user}",
+      "entity: ${2:User}",
+      "route: ${3:/api/login}",
+      "method: POST",
+      "inputs: (${4:email, password})",
+      "",
+      "steps:",
+      "    find ${2:User} by ${4:email} as user",
+      "",
+      "    if user not found:",
+      "        show error \"User not found\"",
+      "",
+      "    if password does not match user.password:",
+      "        show error \"Invalid credentials\"",
+      "",
+      "    generate token",
+      "    return success with token$0"
+    ],
+    "description": "Complete authentication intent template"
+  },
+  "Full CRUD Intent": {
+    "prefix": "intent:crud",
+    "body": [
+      "intent: ${1:create_item}",
+      "entity: ${2:Item}",
+      "route: ${3:/api/items}",
+      "method: POST",
+      "inputs: (${4:title, description})",
+      "",
+      "steps:",
+      "    protect route",
+      "    create ${2:item}",
+      "    return success$0"
+    ],
+    "description": "Complete CRUD intent template"
+  },
+  "Sovereign Entity Template": {
+    "prefix": "entity:sovereign",
+    "body": [
+      "entity: ${1:User}",
+      "fields:",
+      "    - id: string (unique)",
+      "    - email: string (unique)",
+      "    - password: string (secure)",      "    - role: string",
+      "    - createdAt: datetime (auto)",
+      "    - updatedAt: datetime (auto)$0"
+    ],
+    "description": "Entity with sovereign fields (secure, audit-ready)"
+  },
+  "Comment": {
+    "prefix": "comment",
+    "body": [
+      "# ${1:Comment text}$0"
+    ],
+    "description": "Add a comment line"
+  }
+}
