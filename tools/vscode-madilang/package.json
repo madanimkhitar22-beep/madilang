@@ -1,0 +1,111 @@
+{
+  "name": "vscode-madilang",
+  "displayName": "MadiLang",
+  "description": "Sovereign intent-driven programming language support. Syntax highlighting, snippets, and language configuration for .madi files.",
+  "version": "0.4.0",
+  "publisher": "madanimkhitar22-beep",
+  "author": {
+    "name": "El Madani El Mkhitar",
+    "email": "madani004@proton.me"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Other"
+  ],
+  "keywords": [
+    "madilang",
+    "intent-driven",
+    "sovereign",
+    "code-generation",
+    "web3",
+    "ethics",
+    "madi"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/madanimkhitar22-beep/madilang.git"
+  },
+  "bugs": {
+    "url": "https://github.com/madanimkhitar22-beep/madilang/issues"
+  },
+  "homepage": "https://github.com/madanimkhitar22-beep/madilang",
+  "icon": "images/madi-icon.png",
+  "activationEvents": [
+    "onLanguage:madi"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "madi",
+        "aliases": [
+          "MadiLang",
+          "madi"
+        ],
+        "extensions": [          ".madi"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "madi",
+        "scopeName": "source.madi",
+        "path": "./syntaxes/madi.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "madi",
+        "path": "./snippets/madi.code-snippets"
+      }
+    ],
+    "configuration": {
+      "title": "MadiLang",
+      "properties": {
+        "madilang.enableSovereignHints": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable sovereign intent hints and ethics warnings in editor"
+        },
+        "madilang.defaultTarget": {
+          "type": "string",
+          "enum": [
+            "nodejs",
+            "python",
+            "go"
+          ],
+          "default": "nodejs",
+          "description": "Default target language for code generation"
+        },
+        "madilang.autoVerifySignature": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically verify sovereign signature on file save"
+        },
+        "madilang.developerId": {
+          "type": "string",
+          "default": "",
+          "description": "Developer ID for sovereign signature generation"
+        }
+      }
+    }
+  },
+  "scripts": {    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.75.0",
+    "@types/node": "^18.0.0",
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0"
+  }
+}
