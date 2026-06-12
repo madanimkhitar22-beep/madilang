@@ -1,0 +1,336 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "MadiLang",
+  "scopeName": "source.madi",
+  "fileTypes": [
+    "madi"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#entity-definition"
+    },
+    {
+      "include": "#intent-definition"
+    },
+    {
+      "include": "#route-definition"
+    },
+    {
+      "include": "#method-definition"
+    },
+    {
+      "include": "#inputs-definition"
+    },
+    {
+      "include": "#fields-block"
+    },
+    {
+      "include": "#steps-block"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.madi",
+          "match": "^\\s*#.*$"
+        }
+      ]
+    },
+    "entity-definition": {
+      "patterns": [
+        {
+          "name": "meta.entity.definition.madi",
+          "begin": "^\\s*(entity)\\s*:",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.entity.madi"
+            }
+          },
+          "end": "$",
+          "patterns": [
+            {
+              "name": "entity.name.type.madi",
+              "match": "\\s*([A-Z][a-zA-Z0-9_]*)"
+            }
+          ]
+        }
+      ]
+    },
+    "intent-definition": {
+      "patterns": [
+        {
+          "name": "meta.intent.definition.madi",
+          "begin": "^\\s*(intent)\\s*:",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.intent.madi"
+            }
+          },
+          "end": "$",
+          "patterns": [
+            {
+              "name": "entity.name.function.madi",
+              "match": "\\s*([a-z][a-zA-Z0-9_]*)"
+            }
+          ]
+        }
+      ]
+    },
+    "route-definition": {
+      "patterns": [
+        {
+          "name": "meta.route.definition.madi",
+          "match": "^\\s*(route)\\s*:\\s*(.+)$",
+          "captures": {
+            "1": {
+              "name": "keyword.control.route.madi"
+            },
+            "2": {
+              "name": "string.unquoted.route.madi"
+            }
+          }
+        }
+      ]
+    },
+    "method-definition": {
+      "patterns": [
+        {
+          "name": "meta.method.definition.madi",
+          "match": "^\\s*(method)\\s*:\\s*(GET|POST|PUT|PATCH|DELETE)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.method.madi"
+            },
+            "2": {
+              "name": "constant.language.http-method.madi"
+            }
+          }
+        }
+      ]
+    },
+    "inputs-definition": {
+      "patterns": [
+        {
+          "name": "meta.inputs.definition.madi",
+          "begin": "^\\s*(inputs)\\s*:",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.inputs.madi"
+            }
+          },
+          "end": "$",
+          "patterns": [
+            {
+              "name": "variable.parameter.madi",
+              "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+            },
+            {
+              "name": "punctuation.separator.madi",
+              "match": "[(),]"
+            }
+          ]
+        }
+      ]
+    },
+    "fields-block": {
+      "patterns": [
+        {
+          "name": "meta.fields.block.madi",
+          "begin": "^\\s*(fields)\\s*:",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.fields.madi"
+            }
+          },
+          "end": "^(?=\\s*(entity|intent|route|method|inputs|steps)\\s*:)|$",
+          "patterns": [
+            {
+              "include": "#field-line"
+            }
+          ]
+        }
+      ]
+    },
+    "field-line": {
+      "patterns": [
+        {
+          "name": "meta.field.definition.madi",
+          "match": "^\\s*(-)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*(:)\\s*([a-zA-Z_][a-zA-Z0-9_]*)(.*)?$",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.list.madi"
+            },
+            "2": {
+              "name": "variable.other.property.madi"
+            },
+            "3": {
+              "name": "punctuation.separator.key-value.madi"
+            },
+            "4": {
+              "name": "storage.type.madi"
+            },
+            "5": {
+              "patterns": [
+                {
+                  "include": "#modifiers"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "modifiers": {
+      "patterns": [
+        {
+          "name": "meta.modifiers.madi",
+          "begin": "\\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.modifiers.begin.madi"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.modifiers.end.madi"
+            }
+          },
+          "patterns": [
+            {
+              "name": "entity.other.attribute-name.modifier.unique.madi",
+              "match": "\\b(unique)\\b"
+            },
+            {
+              "name": "entity.other.attribute-name.modifier.secure.madi",
+              "match": "\\b(secure)\\b"
+            },
+            {
+              "name": "entity.other.attribute-name.modifier.auto.madi",
+              "match": "\\b(auto)\\b"
+            },
+            {
+              "name": "entity.other.attribute-name.modifier.optional.madi",
+              "match": "\\b(optional)\\b"
+            },
+            {
+              "name": "punctuation.separator.modifier.madi",
+              "match": ","
+            }
+          ]
+        }
+      ]
+    },
+    "steps-block": {
+      "patterns": [
+        {
+          "name": "meta.steps.block.madi",
+          "begin": "^\\s*(steps)\\s*:",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.steps.madi"
+            }
+          },
+          "end": "^(?=\\s*(entity|intent)\\s*:)|$",
+          "patterns": [
+            {
+              "include": "#step-line"
+            }
+          ]
+        }
+      ]
+    },
+    "step-line": {
+      "patterns": [
+        {
+          "name": "meta.step.conditional.madi",
+          "match": "^\\s+(if)\\s+(.+?)(:)?$",
+          "captures": {
+            "1": {
+              "name": "keyword.control.conditional.if.madi"
+            },
+            "2": {
+              "patterns": [
+                {
+                  "name": "keyword.operator.madi",
+                  "match": "\\b(exists|not found|does not match)\\b"
+                },
+                {
+                  "name": "variable.other.madi",
+                  "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+                },
+                {
+                  "name": "punctuation.accessor.dot.madi",
+                  "match": "\\."
+                }
+              ]
+            },
+            "3": {
+              "name": "punctuation.separator.colon.madi"
+            }
+          }
+        },
+        {
+          "name": "meta.step.action.madi",
+          "match": "^\\s+(create|update|delete|find|login|return|show|stop|generate|protect|allow)\\b(.*)$",
+          "captures": {
+            "1": {
+              "name": "keyword.control.action.madi"
+            },
+            "2": {
+              "patterns": [
+                {
+                  "include": "#step-arguments"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "meta.step.custom.madi",
+          "match": "^\\s+([a-zA-Z_][a-zA-Z0-9_]*)(.*)$",
+          "captures": {
+            "1": {
+              "name": "variable.function.custom.madi"
+            },
+            "2": {
+              "patterns": [
+                {
+                  "include": "#step-arguments"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "step-arguments": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.madi",
+          "match": "\"[^\"]*\""
+        },
+        {
+          "name": "string.quoted.single.madi",
+          "match": "'[^']*'"
+        },
+        {
+          "name": "variable.other.madi",
+          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        },
+        {
+          "name": "keyword.operator.madi",
+          "match": "\\b(by|as|with|only|and|or)\\b"
+        },
+        {
+          "name": "punctuation.accessor.dot.madi",
+          "match": "\\."
+        }
+      ]
+    }
+  }
+}
