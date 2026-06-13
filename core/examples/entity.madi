@@ -1,5 +1,0 @@
-entity: User
-fields:
-    name string
-    email string unique
-    password string secret
