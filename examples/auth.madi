@@ -15,7 +15,7 @@ inputs: (name, email, password)
 steps:
     find user by email as existing_user
 
-    if existing_user:
+    if existing_user found:
         show error "Email already exists"
         stop process
 
