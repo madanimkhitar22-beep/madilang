@@ -1,15 +1,25 @@
+entity: User
+fields:
+  - name: string
+  - email: string (unique)
+  - password: string (secure)
+  - createdAt: datetime (auto)
+
 intent: login_user
-route: /api/login
+route: "/api/login"
 method: POST
 inputs: (email, password)
 
 steps:
-    find user by email as user
-
-    if user not found:
-        show error "User not found"
-
-    if password does not match user.password:
-        show error "Invalid password"
-
-    return success
+  find User by email as user
+  
+  if user not found:
+    show error "User not found"
+    stop process
+  
+  if password does not match user.password:
+    show error "Invalid credentials"
+    stop process
+  
+  generate token
+  return success with token
