@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: "MadiLang"
+message: "If you use MadiLang in your work, please cite it using the metadata below."
+type: software
+authors:
+  - family-names: "El Mkhitar"
+    given-names: "El Madani"
+    orcid: "https://orcid.org/0009-0009-6663-902X"  
+    email: "madani004@proton.me"
+    affiliation: "MadiLang Project"
+abstract: "MadiLang is a sovereign intent-driven programming language that transforms human-readable descriptions into production-ready, secure, and ethical backend systems with cryptographic proof of origin."
+repository-code: "https://github.com/madanimkhitar22-beep/madilang"
+license: "MIT"
+version: "0.4.0"
+date-released: 2026-06-14
+keywords:
+  - "programming-language"
+  - "intent-driven"
+  - "code-generation"
+  - "sovereignty"
+  - "ethics"
+  - "security"
+  - "mobile-first"
+  - "web3"
+  - "compiler"
+  - "low-code"
