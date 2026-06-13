@@ -13,7 +13,9 @@ method: POST
 inputs: (name, email, password)
 
 steps:
-    if email exists:
+    find user by email as existing_user
+
+    if existing_user:
         show error "Email already exists"
         stop process
 
@@ -31,8 +33,10 @@ steps:
 
     if user not found:
         show error "User not found"
+        stop process
 
     if password does not match user.password:
         show error "Invalid password"
+        stop process
 
     return success
