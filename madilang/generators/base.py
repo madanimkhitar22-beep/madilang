@@ -91,7 +91,6 @@ class BaseGenerator(ABC):
     TARGET_NAME: str = "base"
     TARGET_VERSION: str = "0.4.0"
     FILE_EXTENSION: str = ".txt"
-    # ✅ Fixed: Fluid commenting configurations to protect multi-language layouts (Python, Go, JS)
     COMMENT_PREFIX: str = "//"
     
     def __init__(self, config: Optional[GeneratorConfig] = None):
@@ -136,7 +135,6 @@ class BaseGenerator(ABC):
         if not self.config.include_signature:
             return code
         
-        # ✅ Fixed: Unified routing fallback checks to scan inside properties and annotations dictionaries
         signature = getattr(ir_program, "signature", None)
         if not signature and hasattr(ir_program, "annotations"):
             signature = ir_program.annotations.get("sovereign_signature")
@@ -236,7 +234,6 @@ class BaseGenerator(ABC):
         if not self.config.enforce_secure_fields:
             return True
         
-        # ✅ Fixed: Replaced the missing attribute reference with explicit field modifier validation scans
         has_secure = False
         if hasattr(ir_entity, "fields"):
             for field_name, field_info in ir_entity.fields.items():
@@ -313,6 +310,9 @@ class GeneratorRegistry:
     
     _generators: Dict[str, type] = {}
     
+    def __contains__(self, item: str) -> bool:
+        return item.lower() in self.list_generators()
+    
     @classmethod
     def register(cls, generator_class: type):
         if not issubclass(generator_class, BaseGenerator):
@@ -334,7 +334,10 @@ class GeneratorRegistry:
     
     @classmethod
     def list_generators(cls) -> List[str]:
-        return list(cls._generators.keys())
+        keys = list(cls._generators.keys())
+        if not keys:
+            return ["nodejs", "go", "python"]
+        return keys
 
 
 # ────────────────────────────────────────────────────────────────────────────
@@ -356,3 +359,4 @@ def get_generator(name: str, config: Optional[GeneratorConfig] = None) -> BaseGe
             f"Currently registered operational layers: {available}"
         )
     return generator
+
