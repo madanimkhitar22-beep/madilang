@@ -13,13 +13,11 @@ method: POST
 inputs: (name, email, password)
 
 steps:
-    find user by email as existing_user
-
-    if existing_user found:
+    - find user by email as existing_user
+    - if existing_user:
         show error "Email already exists"
         stop process
-
-    create user
+    - create user
 
 ---
 
@@ -29,14 +27,11 @@ method: POST
 inputs: (email, password)
 
 steps:
-    find user by email as user
-
-    if user not found:
+    - find user by email as user
+    - if user not found:
         show error "User not found"
         stop process
-
-    if password does not match user.password:
+    - if password does not match user.password:
         show error "Invalid password"
         stop process
-
-    return success
+    - return success
