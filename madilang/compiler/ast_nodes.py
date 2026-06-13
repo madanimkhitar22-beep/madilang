@@ -174,7 +174,7 @@ class IntentNode(ASTNode):
 
 @dataclass
 class StepNode(ASTNode):
-    step_type: StepType
+    step_type: str = ""
     args: Dict[str, Any] = field(default_factory=dict)
     body: List["StepNode"] = field(default_factory=list)
     else_body: List["StepNode"] = field(default_factory=list)
