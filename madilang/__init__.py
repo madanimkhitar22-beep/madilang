@@ -96,7 +96,8 @@ def __getattr__(name):
         from madilang.generators.nodejs.generator import NodeJSGenerator
         return NodeJSGenerator
     elif name == "IntentSignature":
-        from madilang.ir.intent_signature import IntentSignature        return IntentSignature
+        from madilang.ir.intent_signature import IntentSignature        
+        return IntentSignature
     elif name == "verify_signature":
         from madilang.ir.intent_signature import verify_signature
         return verify_signature
