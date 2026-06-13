@@ -1,9 +1,9 @@
 entity: User
 fields:
-    - name: string
-    - email: string (unique)
-    - password: string (secure)
-    - createdAt: datetime (auto)
+  - name: string
+  - email: string (unique)
+  - password: string (secure)
+  - createdAt: datetime (auto)
 
 ---
 
@@ -11,11 +11,12 @@ intent: register_user
 route: /api/signup
 method: POST
 inputs: (name, email, password)
-    find user by email as existing_user
-    if existing_user:
-        show error "Email already exists"
-        stop process
-    create user
+steps:
+  find user by email as existing_user
+  if existing_user:
+    show error "Email already exists"
+    stop process
+  create user
 
 ---
 
@@ -23,11 +24,12 @@ intent: login_user
 route: /api/login
 method: POST
 inputs: (email, password)
-    find user by email as user
-    if user not found:
-        show error "User not found"
-        stop process
-    if password does not match user.password:
-        show error "Invalid password"
-        stop process
-    return success
+steps:
+  find user by email as user
+  if user not found:
+    show error "User not found"
+    stop process
+  if password does not match user.password:
+    show error "Invalid password"
+    stop process
+  return success
