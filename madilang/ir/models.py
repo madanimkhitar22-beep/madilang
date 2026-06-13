@@ -196,7 +196,7 @@ class IRInstruction(IRNode):
 class IRFindInstruction(IRInstruction):
     entity: str = ""
     field: str = ""
-    value: IRValue = field(default_factory=IRLiteral)
+    value: IRValue = field(default_factory=lambda: IRLiteral())
     result: str = ""
     
     def __post_init__(self):
