@@ -1,43 +1,70 @@
-
-# 🧠 MadiLang v0.4.0 — Sovereign Intent-Driven Programming Language
+<!--
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                                            ║
+║   🧠 MadiLang — Sovereign Intent-Driven Programming Language                               ║
+║                                                                                            ║
+║   "Code is no longer written. It is described."                                            ║
+║   "Sovereignty is no longer optional. It is embedded."                                     ║
+║                                                                                            ║
+║   Built on Mkhitarian Ontology • Mobile-First • Ethics-by-Default                          ║
+║                                                                                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+-->
 
 <div align="center">
 
-[![MadiLang CI](https://github.com/madanimkhitar22-beep/madilang/actions/workflows/test.yml/badge.svg)](https://github.com/madanimkhitar22-beep/madilang/actions/workflows/test.yml)
-[![Python Versions](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)](https://pypi.org/project/madilang/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Mobile-First](https://img.shields.io/badge/mobile--first-✓-brightgreen)](#-mobile-first-development)
-[![Sovereign Signature](https://img.shields.io/badge/sovereign-signature-🔐-gold)](#-sovereign-intent-signature)
-[![Ethics by Default](https://img.shields.io/badge/ethics-by--default-🛡️-purple)](#-ethics--security-by-default)
+<!-- 🖼️ Banner Placeholder: Upload your legendary 1280x640 banner in Settings → Social Preview -->
+<!-- The banner features: Obsidian black, cyber purple, royal gold gradients, 
+     glowing brain/crown logo, and the sovereign tagline. -->
+
+# 🧠 MadiLang v0.4.0
 
 ### ✨ Code is no longer written. It is described. ✨
 
 **MadiLang** transforms human-readable intent into production-ready, secure, and sovereign backend systems.  
-Describe what you want — MadiLang generates the rest with cryptographic proof of origin.
+Describe what you want — MadiLang generates the rest with **cryptographic proof of origin**.
 
-[🚀 Quick Start](#-quick-start) • [📖 Documentation](docs/) • [🧬 Philosophy](#-philosophy) • [🤝 Contribute](#-contributing)
+[![MadiLang CI](https://github.com/madanimkhitar22-beep/madilang/actions/workflows/test.yml/badge.svg)](https://github.com/madanimkhitar22-beep/madilang/actions/workflows/test.yml)
+[![Python Versions](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue?logo=python&logoColor=white)](https://pypi.org/project/madilang/)
+[![License](https://img.shields.io/badge/license-MIT-gold?logo=opensourceinitiative&logoColor=white)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/madanimkhitar22-beep/madilang?color=purple&logo=github&label=release)](https://github.com/madanimkhitar22-beep/madilang/releases)
+[![Mobile-First](https://img.shields.io/badge/mobile--first-✓-brightgreen?logo=android&logoColor=white)](#-mobile-first-sovereignty)
+[![Sovereign Signature](https://img.shields.io/badge/sovereign-signature-🔐-gold?logo=shield&logoColor=white)](#-sovereign-intent-signature)
+[![Ethics by Default](https://img.shields.io/badge/ethics-by--default-🛡️-purple?logo=heart&logoColor=white)](#-ethics--security-by-default)
+[![Discussions](https://img.shields.io/github/discussions/madanimkhitar22-beep/madilang?color=blue&logo=github&label=discussions)](https://github.com/madanimkhitar22-beep/madilang/discussions)
+
+---
+
+### 🚀 Quick Links
+
+[✨ Get Started](#-quick-start) • [📖 Wiki](https://github.com/madanimkhitar22-beep/madilang/wiki) • [🧬 Philosophy](#-philosophy) • [🤝 Contribute](#-join-the-sovereign-movement) • [💬 Discussions](https://github.com/madanimkhitar22-beep/madilang/discussions)
 
 </div>
 
 ---
 
-## 🌟 What Makes MadiLang Unique?
+## 🌟 The Sovereign Difference
 
-| Feature | Traditional Development | MadiLang |
-|---------|------------------------|----------|
-| 🧠 **Abstraction** | Write implementation details | Describe **intent** |
-| 🔐 **Sovereignty** | Manual audit trails | **Cryptographic intent signature** embedded in every artifact |
-| 🛡️ **Security** | Add security as afterthought | **Security & ethics by default** |
+In a world of boilerplate, complexity, and hidden logic, MadiLang restores **clarity, sovereignty, and trust**.
+
+| Dimension | Traditional Development | MadiLang |
+|:---------:|:----------------------:|:--------:|
+| 🧠 **Abstraction** | Write implementation details | **Describe intent** |
+| 🔐 **Provenance** | Manual audit trails | **Cryptographic signature** in every artifact |
+| 🛡️ **Security** | Add as afterthought | **Security & ethics by default** |
 | 📱 **Accessibility** | Requires full IDE/PC | **Mobile-first** — develop on Termux/phone |
 | ⚡ **Boilerplate** | Repetitive setup code | **Zero boilerplate** — generated automatically |
 | 🔗 **Extensibility** | Modify core or fork | **Plugin system** — extend without touching core |
 | 🌐 **Targets** | Single language per project | **Multi-target** — Node.js, Python, Go (planned) |
+| 🧪 **Quality** | Manual testing | **Auto-generated tests** & CI/CD pipeline |
+
+> 💎 **MadiLang is not just a tool. It's a declaration: Human intent is the sovereign layer.**
 
 ---
 
-## 💡 Example: From Intent to Production API
+## 🔥 Live Example: From Intent to Production API
 
-### 📝 Input (`auth.madi`)
+### 📝 Describe Your Intent (`auth.madi`)
 
 ```madi
 entity: User
@@ -70,10 +97,12 @@ steps:
 madi run auth.madi
 ```
 
-### 📤 Output (Auto-Generated Node.js + Express + Prisma)
+### 📤 Output: Sovereign Backend (Node.js + Express + Prisma)
 
 ```javascript
+// ════════════════════════════════════════════════════════════════════
 // 🔐 MadiLang Sovereign Intent Signature
+// ════════════════════════════════════════════════════════════════════
 const __MADI_SIGNATURE__ = {
   "developer": { "id": "madani004" },
   "intent": { "hash": "a3f8c2...", "fingerprint": "7d9e1b..." },
@@ -81,6 +110,7 @@ const __MADI_SIGNATURE__ = {
   "ethics": { "score": 0.95, "passed": true },
   "signature": { "algorithm": "SHA256-HMAC", "value": "..." }
 };
+// ════════════════════════════════════════════════════════════════════
 
 app.post('/api/signup', validateInputs(['name','email','password']), async (req, res) => {
   try {
@@ -94,7 +124,7 @@ app.post('/api/signup', validateInputs(['name','email','password']), async (req,
       data: {
         name: req.body.name,
         email: req.body.email,
-        password: await bcrypt.hash(req.body.password, 10)
+        password: await bcrypt.hash(req.body.password, 10)  // 🔒 Auto-hashed
       }
     });
     
@@ -107,14 +137,15 @@ app.post('/api/signup', validateInputs(['name','email','password']), async (req,
 });
 ```
 
-> ✅ **Secure by default**: Password hashing, input validation, error handling, and JWT generation are automatic.  
-> 🔐 **Sovereign by design**: Every generated file carries a verifiable signature binding it to the original intent.
+> ✅ **Secure by default**: Password hashing, input validation, error handling, JWT generation.  
+> 🔐 **Sovereign by design**: Every file carries a verifiable signature binding it to the original intent.
 
 ---
 
-## 📱 Mobile-First Development
+## 📱 Mobile-First Sovereignty
 
-MadiLang is designed to run **anywhere Python runs** — including your smartphone.
+MadiLang is designed to run **anywhere Python runs** — including your smartphone.  
+**No heavy IDE. No powerful PC. Just intent and sovereignty.**
 
 ### 🤖 Termux Setup (Android)
 
@@ -126,14 +157,14 @@ pkg update && pkg install python nodejs git
 git clone https://github.com/madanimkhitar22-beep/madilang.git
 cd madilang
 
-# 3. Install in editable mode (for development)
+# 3. Install in editable mode
 pip install -e .
 
 # 4. Verify installation
 madi --version
 # 🧠 MadiLang v0.4.0 — Sovereign Intent Compiler
 
-# 5. Initialize and run your first project
+# 5. Initialize and run
 madi init my-backend
 cd my-backend
 madi run src/main.madi
@@ -146,7 +177,7 @@ pip install madilang
 madi run your_file.madi
 ```
 
-> 💡 **No heavy IDE required**. Write `.madi` files in any text editor and compile instantly.
+> 💡 **Democratizing development**: Build sovereign backends from anywhere, even a smartphone.
 
 ---
 
@@ -154,25 +185,25 @@ madi run your_file.madi
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                            MadiLang Compiler Pipeline                                          │
+│                    🧠 MadiLang Sovereign Compiler Pipeline                      │
 ├─────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                                │
-│  📝 Source (.madi)                                                                            │
-│       ↓                                                                                        │
-│  🔍 Parser (Recursive Descent) → AST                                                         │
-│       ↓                                                                                        │
-│  📋 Analyzer (Semantic Validation + Ethics Enrichment)                                        │
-│       ↓                                                                                        │
-│  🔐 IntentSignature (Sovereign Binding + Cryptographic Hash)                                  │
-│       ↓                                                                                        │
-│  ⚙️ StepCompiler → IR (Language-Agnostic Intermediate Representation)                        │
-│       ↓                                                                                        │
-│  🧩 Plugin Hooks (Ethics, Security, Custom Transformers)                                      │
-│       ↓                                                                                        │
-│  🏗️ CodeGenerator → Target Code (Node.js, Python, Go...)                                     │
-│       ↓                                                                                        │
-│  📤 Output + Embedded Signature + Runtime Verification                                        │
-│                                                                                                │
+│                                                                                 │
+│  📝 Source (.madi)                                                              │
+│       ↓                                                                         │
+│  🔍 Parser (Recursive Descent) → AST                                            │
+│       ↓                                                                         │
+│  📋 Analyzer (Semantic Validation + Ethics Enrichment)                          │
+│       ↓                                                                         │
+│  🔐 IntentSignature (Cryptographic Binding + Provenance)                        │
+│       ↓                                                                         │
+│  ⚙️ StepCompiler → IR (Language-Agnostic Intermediate Representation)           │
+│       ↓                                                                         │
+│  🧩 Plugin Hooks (Ethics, Security, Custom Transformers)                        │
+│       ↓                                                                         │
+│  🏗️ CodeGenerator → Target Code (Node.js, Python, Go...)                       │
+│       ↓                                                                         │
+│  📤 Output + Embedded Signature + Runtime Verification                          │
+│                                                                                 │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -180,17 +211,17 @@ madi run your_file.madi
 
 ```
 madilang/
-├── madilang/              # Core package
-│   ├── compiler/          # Parser, AST, Analyzer
-│   ├── ir/               # Intermediate Representation + Signature Engine
-│   ├── generators/       # Code generators (Node.js, Python, Go)
-│   ├── stdlib/           # Standard library (Auth, Validation)
-│   ├── plugins/          # Plugin system (Ethics, Security hooks)
-│   └── cli/              # Command-line interface
-├── tests/                # Comprehensive test suite
-├── examples/             # Ready-to-run examples
-├── tools/                # VSCode extension, dev tools
-└── .github/workflows/    # CI/CD pipeline
+├── madilang/              # 🧠 Core sovereign package
+│   ├── compiler/          # 🔍 Parser, AST, Analyzer
+│   ├── ir/               # ⚙️ IR + Signature Engine
+│   ├── generators/       # 🏗️ Code generators (Node.js, Python, Go)
+│   ├── stdlib/           # 📚 Auth, Validation, Security
+│   ├── plugins/          # 🧩 Plugin system (Ethics, Security hooks)
+│   └── cli/              # 🖥️ Command-line interface
+├── tests/                # 🧪 Comprehensive test suite
+├── examples/             # 💡 Ready-to-run examples
+├── tools/                # 🤖 VSCode extension, dev tools
+└── .github/workflows/    # 🔄 CI/CD pipeline
 ```
 
 ---
@@ -231,15 +262,17 @@ if (!verification.valid) {
 
 ## 🛡️ Ethics & Security by Default
 
-MadiLang enforces **ethical and secure patterns** at compile time:
+MadiLang enforces **ethical and secure patterns** at compile time.
 
 ### ✅ Automatic Security Checks
 
-- 🔒 **Secure field handling**: Fields marked `(secure)` are automatically hashed
-- 🔐 **Authentication coverage**: Sensitive routes require auth protection
-- 👤 **Role-based access**: Admin operations enforce role guards
-- 🚫 **Injection prevention**: Input validation generated for all inputs
-- ⚠️ **Error safety**: Generic error messages prevent data leakage
+| Check | Description |
+|-------|-------------|
+| 🔒 **Secure Fields** | Fields marked `(secure)` are automatically hashed with bcrypt |
+| 🔐 **Auth Coverage** | Sensitive routes require authentication protection |
+| 👤 **Role Guards** | Admin operations enforce role-based access control |
+| 🚫 **Injection Prevention** | Input validation generated for all inputs |
+| ⚠️ **Error Safety** | Generic error messages prevent data leakage |
 
 ### 🧠 Ethics Scoring
 
@@ -278,7 +311,6 @@ class CustomAuditPlugin(BasePlugin):
         )
     
     def post_generate(self, context):
-        # Add custom audit code to generated output
         context.generated_code += "\n// Custom audit hook injected\n"
         return context.generated_code
 ```
@@ -320,18 +352,18 @@ madi --version
 
 ## 📦 Installation
 
-### 🐍 From PyPI (Coming Soon)
-
-```bash
-pip install madilang
-```
-
 ### 🔧 From Source
 
 ```bash
 git clone https://github.com/madanimkhitar22-beep/madilang.git
 cd madilang
 pip install -e .
+```
+
+### 🐍 From PyPI (Coming Soon)
+
+```bash
+pip install madilang
 ```
 
 ### 📋 Requirements
@@ -360,15 +392,20 @@ MadiLang is built on the **Mkhitarian Ontology**:
 
 ### 🔗 Related Projects
 
-- [Mkhitarist Philosophy](https://github.com/madanimkhitar22-beep/Mekhitarian-Philosophy) — The philosophical foundation
+- [Mkhitarian Philosophy](https://github.com/madanimkhitar22-beep/Mekhitarian-Philosophy) — The philosophical foundation
 - [Sovereign-Cognition-Engine](https://github.com/madanimkhitar22-beep/-Sovereign-Cognition-Engine) — Ethics evaluation engine
 - [Sovereign-DevKit](https://github.com/madanimkhitar22-beep/Sovereign-DevKit) — Security scanning toolkit
 
 ---
 
-## 🤝 Contributing
+## 🤝 Join the Sovereign Movement
 
-We welcome contributions from developers worldwide!
+We welcome contributors, thinkers, and builders from around the world!
+
+### 💬 Discussions
+
+Have questions? Ideas? Want to share your MadiLang projects?  
+👉 [Join the Discussions](https://github.com/madanimkhitar22-beep/madilang/discussions)
 
 ### 📋 Development Setup
 
@@ -406,6 +443,12 @@ python -m build
 - [ ] Documentation updated
 - [ ] Examples added if applicable
 
+### 📜 Governance
+
+- [Code of Conduct](CODE_OF_CONDUCT.md) — Our community standards
+- [Security Policy](SECURITY.md) — Responsible disclosure guidelines
+- [License](LICENSE) — MIT License
+
 ---
 
 ## 📜 Changelog
@@ -425,28 +468,41 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed release notes.
 
 ---
 
-## 📄 License
+## 🔮 Roadmap
 
-This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
+### v0.5.0 (Planned)
 
-```
-MIT License
+- 🐍 Python/FastAPI generator
+- 🦀 Go/Fiber generator
+- 🧪 Auto-testing generator from intents
+- 📚 Live API documentation generation
+- 🩺 `madi doctor` command for environment diagnostics
 
-Copyright © 2026 El Madani El Mkhitar
+### v1.0.0 (Vision)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+- 🌐 Multi-language parity (Node.js, Python, Go)
+- 🔗 Pi Network integration for decentralized deployment
+- 🧠 Sovereign-Cognition-Engine deep integration
+- 📦 PyPI publication and stable API
+- 🌍 Community plugin ecosystem
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+---
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+## 📄 Citation
+
+If you use MadiLang in your work, please cite it:
+
+```yaml
+cff-version: 1.2.0
+title: "MadiLang"
+authors:
+  - family-names: "El Mkhitar"
+    given-names: "El Madani"
+    email: "madani004@proton.me"
+version: "0.4.0"
+date-released: 2026-06-14
+license: "MIT"
+repository-code: "https://github.com/madanimkhitar22-beep/madilang"
 ```
 
 ---
@@ -454,7 +510,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ## 👤 Author
 
 **El Madani El Mkhitar**  
-📧 [madani004](madani004@gmail.com)  
+📧 [madani004@proton.me](mailto:madani004@proton.me)  
 🌐 [GitHub Profile](https://github.com/madanimkhitar22-beep)
 
 > *"Building sovereign tools for a decentralized future, one intent at a time."*
@@ -470,8 +526,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ---
 
 **🧠 Code is no longer written. It is described.**  
-**🔐 Sovereignty is no longer optional. It is embedded.**
+**🔐 Sovereignty is no longer optional. It is embedded.**  
+**🌍 The future of development is sovereign, ethical, and accessible to all.**
 
 </div>
-
-
