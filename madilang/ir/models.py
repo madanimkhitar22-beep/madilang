@@ -1,5 +1,5 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang — Intermediate Representation (IR) Models (Refined)
+# 🧠 MadiLang — Intermediate Representation (IR) Models (Final Version)
 # ════════════════════════════════════════════════════════════════════════════
 # Defines language-agnostic IR structures for code generation.
 # IR is the sovereign layer between intent and execution.
@@ -153,8 +153,14 @@ class IRExpression(IRNode):
 @dataclass
 class IRBinaryOp(IRExpression):
     operator: str = ""  # ==, !=, <, >, etc.
-    left: IRValue = field(default_factory=lambda: IRLiteral())
-    right: IRValue = field(default_factory=lambda: IRLiteral())
+    left: Any = None
+    right: Any = None
+
+    def __post_init__(self):
+        if self.left is None:
+            self.left = IRLiteral()
+        if self.right is None:
+            self.right = IRLiteral()
 
     def to_dict(self) -> Dict[str, Any]:
         res = super().to_dict()
@@ -196,10 +202,12 @@ class IRInstruction(IRNode):
 class IRFindInstruction(IRInstruction):
     entity: str = ""
     field: str = ""
-    value: IRValue = field(default_factory=lambda: IRLiteral())
+    value: Any = None
     
     def __post_init__(self):
         self.opcode = IROpCode.FIND
+        if self.value is None:
+            self.value = IRLiteral()
 
     def to_dict(self) -> Dict[str, Any]:
         res = super().to_dict()
@@ -268,12 +276,14 @@ class IRDeleteInstruction(IRInstruction):
 
 @dataclass
 class IRIfInstruction(IRInstruction):
-    condition: IRExpression = field(default_factory=lambda: IRBinaryOp())
+    condition: Any = None
     body: List[IRInstruction] = field(default_factory=list)
     else_body: List[IRInstruction] = field(default_factory=list)
     
     def __post_init__(self):
         self.opcode = IROpCode.IF
+        if self.condition is None:
+            self.condition = IRBinaryOp()
 
     def to_dict(self) -> Dict[str, Any]:
         res = super().to_dict()
@@ -395,7 +405,7 @@ class IRRawInstruction(IRInstruction):
 
     def to_dict(self) -> Dict[str, Any]:
         res = super().to_dict()
-        res["text"] = text
+        res["text"] = self.text
         return res
 
 
