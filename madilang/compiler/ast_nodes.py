@@ -106,7 +106,7 @@ class ProgramNode(ASTNode):
 
 @dataclass
 class FieldNode(ASTNode):
-    name: str
+    name: str = ""
     type: str = "string"
     modifiers: List[str] = field(default_factory=list)
     
@@ -124,7 +124,7 @@ class FieldNode(ASTNode):
 
 @dataclass
 class EntityNode(ASTNode):
-    name: str
+    name: str = ""
     fields: List[FieldNode] = field(default_factory=list)
     
     def __post_init__(self):
@@ -147,9 +147,9 @@ class EntityNode(ASTNode):
 
 @dataclass
 class IntentNode(ASTNode):
-    name: str
-    entity: str
-    route: str
+    name: str = ""
+    entity: str = ""
+    route: str = ""
     method: HTTPMethod = HTTPMethod.POST
     inputs: List[str] = field(default_factory=list)
     steps: List["StepNode"] = field(default_factory=list)
