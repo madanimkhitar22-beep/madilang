@@ -17,7 +17,7 @@ steps:
     show error "Email already exists"
     stop process
   
-  create user
+  create User
   generate token
   return success with token
 
