@@ -153,8 +153,8 @@ class IRExpression(IRNode):
 @dataclass
 class IRBinaryOp(IRExpression):
     operator: str = ""  # ==, !=, <, >, etc.
-    left: IRValue = field(default_factory=IRLiteral)
-    right: IRValue = field(default_factory=IRLiteral)
+    left: IRValue = field(default_factory=lambda: IRLiteral())
+    right: IRValue = field(default_factory=lambda: IRLiteral())
 
     def to_dict(self) -> Dict[str, Any]:
         res = super().to_dict()
@@ -196,8 +196,7 @@ class IRInstruction(IRNode):
 class IRFindInstruction(IRInstruction):
     entity: str = ""
     field: str = ""
-    value: IRValue = field(default_factory=lambda: madilang.ir.models.IRLiteral())
-    result: str = ""
+    value: IRValue = field(default_factory=lambda: IRLiteral())
     
     def __post_init__(self):
         self.opcode = IROpCode.FIND
@@ -216,10 +215,11 @@ class IRFindInstruction(IRInstruction):
 class IRCreateInstruction(IRInstruction):
     entity: str = ""
     data: Dict[str, IRValue] = field(default_factory=dict)
-    result: str = "result"
     
     def __post_init__(self):
         self.opcode = IROpCode.CREATE
+        if self.result is None:
+            self.result = "result"
 
     def to_dict(self) -> Dict[str, Any]:
         res = super().to_dict()
@@ -268,7 +268,7 @@ class IRDeleteInstruction(IRInstruction):
 
 @dataclass
 class IRIfInstruction(IRInstruction):
-    condition: IRExpression = field(default_factory=IRBinaryOp)
+    condition: IRExpression = field(default_factory=lambda: IRBinaryOp())
     body: List[IRInstruction] = field(default_factory=list)
     else_body: List[IRInstruction] = field(default_factory=list)
     
@@ -347,11 +347,12 @@ class IRRoleCheckInstruction(IRInstruction):
 @dataclass
 class IRGenerateTokenInstruction(IRInstruction):
     payload: Dict[str, IRValue] = field(default_factory=dict)
-    result: str = "token"
     expires_in: str = "7d"
     
     def __post_init__(self):
         self.opcode = IROpCode.GENERATE_TOKEN
+        if self.result is None:
+            self.result = "token"
 
     def to_dict(self) -> Dict[str, Any]:
         res = super().to_dict()
@@ -368,10 +369,11 @@ class IRVerifyPasswordInstruction(IRInstruction):
     input_var: str = "password"
     stored_var: str = ""
     stored_field: str = "password"
-    result: str = "password_valid"
     
     def __post_init__(self):
         self.opcode = IROpCode.VERIFY_PASSWORD
+        if self.result is None:
+            self.result = "password_valid"
 
     def to_dict(self) -> Dict[str, Any]:
         res = super().to_dict()
@@ -393,7 +395,7 @@ class IRRawInstruction(IRInstruction):
 
     def to_dict(self) -> Dict[str, Any]:
         res = super().to_dict()
-        res["text"] = self.text
+        res["text"] = text
         return res
 
 
@@ -477,7 +479,6 @@ class IREntity(IRNode):
             self.secure_field_names.append(name)
 
     def to_dict(self) -> Dict[str, Any]:
-        # ✅ Fixed Deep Serialization omission by writing explicit mapping loop
         res = super().to_dict()
         res.update({
             "name": self.name,
@@ -561,7 +562,8 @@ class IRBuilder:
     def find(self, entity: str, field: str, value: str, as_var: str) -> "IRBuilder":
         if self._current_intent:
             instr = IRFindInstruction(entity=entity, field=field, 
-                                      value=IRVariable(name=value), result=as_var)
+                                      value=IRVariable(name=value))
+            instr.result = as_var
             self._current_intent.body.add_instruction(instr)
             self._current_intent.body.add_variable(as_var, entity)
         return self
@@ -579,7 +581,6 @@ class IRBuilder:
     
     def error(self, message: str, status: int = 400) -> "IRBuilder":
         if self._current_intent:
-            # ✅ Fixed: Aligned constructor parameter tracking to match signature definition maps
             instr = IRErrorInstruction(message=message, status_code=status)
             self._current_intent.body.add_instruction(instr)
         return self
