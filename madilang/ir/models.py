@@ -200,9 +200,10 @@ class IRInstruction(IRNode):
 
 @dataclass
 class IRFindInstruction(IRInstruction):
-    entity: str = ""
-    field: str = ""
-    value: Any = None
+    entity_name: str = ""
+    query_field: str = ""
+    value: Any = field(default_factory=lambda: IRLiteral(value="")) 
+    assign_to: Optional[str] = None
     
     def __post_init__(self):
         self.opcode = IROpCode.FIND
