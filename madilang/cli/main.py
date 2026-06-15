@@ -155,8 +155,9 @@ class MadiCLI:
             return 1
             
     def _get_template_madi(self, template: str) -> str:
+        """Get template .madi content."""
         if template == "auth":
-            return """entity: User
+            return '''entity: User
 fields:
     - name: string
     - email: string (unique)
@@ -164,19 +165,42 @@ fields:
     - createdAt: datetime (auto)
 
 intent: register_user
-entity: User
-route: /api/register
+route: "/api/signup"
 method: POST
 inputs: (name, email, password)
 
 steps:
-    if email exists:
+    find User by email as existing_user
+    
+    if existing_user:
         show error "Email already exists"
-    create user
+        stop process
+    
+    create User
     generate token
     return success with token
-"""
-        return """entity: Item
+
+intent: login_user
+route: "/api/login"
+method: POST
+inputs: (email, password)
+
+steps:
+    find User by email as user
+    
+    if user not found:
+        show error "User not found"
+        stop process
+    
+    if password does not match user.password:
+        show error "Invalid credentials"
+        stop process
+    
+    generate token
+    return success with token
+'''
+        else:
+            return '''entity: Item
 fields:
     - title: string
     - description: string
@@ -184,15 +208,21 @@ fields:
     - createdAt: datetime (auto)
 
 intent: create_item
-entity: Item
-route: /api/items
+route: "/api/items"
 method: POST
 inputs: (title, description)
 
 steps:
-    create item
+    create Item
     return success
-"""
+
+intent: get_items
+route: "/api/items"
+method: GET
+
+steps:
+    return success
+'''
 
     def _get_env_template(self) -> str:
         return "PORT=3000\nNODE_ENV=development\nDATABASE_URL=postgresql://user:pass@localhost:5432/madidb\nJWT_SECRET=devsecret\n"
