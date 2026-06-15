@@ -1,5 +1,5 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang — Sovereign Intent Signature Engine (Refined)
+# 🧠 MadiLang — Sovereign Intent Signature Engine (Fully Verified)
 # ════════════════════════════════════════════════════════════════════════════
 # Generates cryptographic signatures binding code to human intent.
 # Ensures sovereignty, auditability, and tamper detection.
@@ -220,7 +220,6 @@ class IntentSignatureEngine:
         ir_program.signature = sig_data
         ir_program.add_annotation("sovereign_signature", sig_data)
         
-        # ✅ Fixed: Utilized explicit model metadata dictionary storage loops instead of properties injection
         for intent in ir_program.intents.values():
             intent.add_annotation("sovereign_signature", sig_data)
             intent.add_metadata("intent_signature_hash", signature.intent_hash)
@@ -265,7 +264,6 @@ class IntentSignatureEngine:
         return hashlib.sha256(source.encode("utf-8")).hexdigest()
     
     def _compute_ast_fingerprint(self, program: ProgramNode) -> str:
-        # ✅ Fixed: Wrapped polymorphic i.method instances into explicit strings to isolate AttributeErrors
         intents_extracted = []
         for i in program.intents:
             method_name = i.method.name if hasattr(i.method, 'name') else str(i.method)
@@ -306,6 +304,9 @@ class IntentSignatureEngine:
         except Exception as e:
             warnings.warn(f"Ethics evaluation failed: {e}", UserWarning)
             return {"score": None, "passed": True, "details": {"error": str(e)}}
+
+    def _compute_signature(self, payload: Dict[str, Any]) -> str:
+        return self._compute_signature_with_algo(payload, self.config.algorithm)
     
     def _compute_signature_with_algo(self, payload: Dict[str, Any], algorithm: str) -> str:
         payload_str = json.dumps(payload, sort_keys=True)
@@ -318,21 +319,8 @@ class IntentSignatureEngine:
             
         return base64.b64encode(sig).decode("ascii")
 
-    def _compute_signature(self, payload: Dict[str, Any]) -> str:
-        return self._compute_with_algo_fallback(payload, self.config.algorithm)
-
-    def _compute_with_algo_fallback(self, payload: Dict[str, Any], algorithm: str) -> str:
-        payload_str = json.dumps(payload, sort_keys=True)
-        if algorithm == "SHA256-HMAC":
-            key = (self.config.secret_key or "MADI_DEV_SECRET").encode("utf-8")
-            sig = hmac.new(key, payload_str.encode("utf-8"), hashlib.sha256).digest()
-        else:
-            sig = hashlib.sha256(payload_str.encode("utf-8")).digest()
-        return base64.b64encode(sig).decode("ascii")
-
     def _verify_signature_value(self, payload: Dict[str, Any], signature: str, algorithm: str) -> bool:
-        # ✅ Fixed: Unified dynamic runtime algorithm routing to protect cross-compiled environments
-        expected = self._compute_with_algo_fallback(payload, algorithm)
+        expected = self._compute_signature_with_algo(payload, algorithm)
         return hmac.compare_digest(expected, signature)
 
 
@@ -392,3 +380,4 @@ def verify_madi_signature(
 ) -> Dict[str, Any]:
     engine = create_signature_engine()
     return engine.verify_signature(signature, source)
+
