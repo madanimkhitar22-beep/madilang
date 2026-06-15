@@ -114,8 +114,8 @@ class ASTNode:
 
 @dataclass
 class FieldNode(ASTNode):
-    name: str ''
-    type_name: str ''
+    name: str = ''
+    type_name: str = ''
     is_unique: bool = False
     is_secure: bool = False
     is_nullable: bool = False
