@@ -104,17 +104,23 @@ class ProgramNode(ASTNode):
 # Entity Definitions
 # ────────────────────────────────────────────────────────────────────────────
 
+from dataclasses import dataclass, field
+from typing import Any, List, Optional
+
+@dataclass
+class ASTNode:
+    line: Optional[int] = field(default=None, kw_only=True)
+    column: Optional[int] = field(default=None, kw_only=True)
+
 @dataclass
 class FieldNode(ASTNode):
-    name: str = ""
-    type: str = "string"
-    modifiers: List[str] = field(default_factory=list)
-    
-    is_unique: bool = field(init=False)
-    is_secure: bool = field(init=False)
-    is_optional: bool = field(init=False)
-    is_auto: bool = field(init=False)
-    
+    name: str ''
+    type_name: str ''
+    is_unique: bool = False
+    is_secure: bool = False
+    is_nullable: bool = False
+    is_auto: bool = False
+
     def __post_init__(self):
         self.is_unique = "unique" in self.modifiers
         self.is_secure = "secure" in self.modifiers
