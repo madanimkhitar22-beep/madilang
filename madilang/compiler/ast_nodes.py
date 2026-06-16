@@ -108,6 +108,11 @@ from dataclasses import dataclass, field
 from typing import Any, List, Optional
 
 @dataclass
+class ASTNode:
+    line: Optional[int] = None
+    column: Optional[int] = None
+
+@dataclass
 class FieldNode(ASTNode):
     name: str = ""
     type_name: str = ""
@@ -120,6 +125,7 @@ class FieldNode(ASTNode):
 
     def __init__(self, *args, **kwargs):
         self.name = kwargs.pop('name', "")
+        
         self.type_name = kwargs.pop('type_name', "")
         self.type = kwargs.pop('type', "")
         if self.type and not self.type_name:
@@ -131,6 +137,7 @@ class FieldNode(ASTNode):
         self.is_secure = kwargs.pop('is_secure', False)
         self.is_nullable = kwargs.pop('is_nullable', False)
         self.is_auto = kwargs.pop('is_auto', False)
+        
         self.modifiers = kwargs.pop('modifiers', None)
         
         super().__init__(**kwargs)
