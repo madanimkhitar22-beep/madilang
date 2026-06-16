@@ -350,13 +350,14 @@ def register_generator(generator_class: type):
     return generator_class
 
 
-def get_generator(name: str, config: Optional[GeneratorConfig] = None) -> BaseGenerator:
-    generator = GeneratorRegistry.create(name, config)
-    if not generator:
-        available = ", ".join(GeneratorRegistry.list_generators())
-        raise ValueError(
-            f"Generator target mapping reference '{name}' not found. "
-            f"Currently registered operational layers: {available}"
-        )
-    return generator
-
+def get_generator(self, target: str):
+    target_key = target.lower().strip()
+    
+    if target_key not in self._registry:
+        for registered_name in self._registry.keys():
+            if registered_name.lower() == target_key:
+                return self._registry[registered_name]
+                
+        raise ValueError(f"Generator target mapping reference '{target}' not found. Currently registered operational layers: {', '.join(self._registry.keys())}")
+        
+    return self._registry[target_key]
