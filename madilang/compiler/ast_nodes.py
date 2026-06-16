@@ -108,11 +108,6 @@ from dataclasses import dataclass, field
 from typing import Any, List, Optional
 
 @dataclass
-class ASTNode:
-    line: Optional[int] = None
-    column: Optional[int] = None
-
-@dataclass
 class FieldNode(ASTNode):
     name: str = ""
     type_name: str = ""
