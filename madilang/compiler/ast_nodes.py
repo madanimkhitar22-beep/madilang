@@ -109,17 +109,18 @@ from typing import Any, List, Optional
 
 @dataclass
 class ASTNode:
-    line: Optional[int] = field(default=None, kw_only=True)
-    column: Optional[int] = field(default=None, kw_only=True)
+    line: Optional[int] = None
+    column: Optional[int] = None
 
 @dataclass
 class FieldNode(ASTNode):
-    name: str = ''
-    type_name: str = ''
+    name: str = ""
+    type_name: str = ""
     is_unique: bool = False
     is_secure: bool = False
     is_nullable: bool = False
     is_auto: bool = False
+
 
     def __post_init__(self):
         self.is_unique = "unique" in self.modifiers
