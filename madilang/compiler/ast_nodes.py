@@ -112,17 +112,12 @@ class ASTNode:
     line: Optional[int] = None
     column: Optional[int] = None
 
-@dataclass
-class FieldNode(ASTNode):
-    name: str = ""
-    type_name: str = ""
-    type: str = ""
-    is_unique: bool = False
-    is_secure: bool = False
-    is_nullable: bool = False
-    is_auto: bool = False
-    modifiers: Any = None
+    def set_location(self, line: Optional[int], column: Optional[int]):
+        self.line = line
+        self.column = column
 
+
+class FieldNode(ASTNode):
     def __init__(self, *args, **kwargs):
         self.name = kwargs.pop('name', "")
         
@@ -137,11 +132,16 @@ class FieldNode(ASTNode):
         self.is_secure = kwargs.pop('is_secure', False)
         self.is_nullable = kwargs.pop('is_nullable', False)
         self.is_auto = kwargs.pop('is_auto', False)
-        
         self.modifiers = kwargs.pop('modifiers', None)
         
-        super().__init__(**kwargs)
-
+        super().__init__(
+            line=kwargs.pop('line', None), 
+            column=kwargs.pop('column', None)
+        )
+        
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+            
 
 @dataclass
 class EntityNode(ASTNode):
