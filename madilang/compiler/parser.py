@@ -181,7 +181,7 @@ class MadiParser:
         
         modifiers = self._parse_modifiers()
         
-        node = FieldNode(name=name, type=field_type, modifiers=modifiers)
+        node = FieldNode(name=field_name, type_name=field_type, modifiers=modifiers)
         node.set_location(start_line)
         return node
     
