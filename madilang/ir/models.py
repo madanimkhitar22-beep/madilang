@@ -200,24 +200,21 @@ class IRInstruction(IRNode):
 
 @dataclass
 class IRFindInstruction(IRInstruction):
-    entity_name: str = ""
-    query_field: str = ""
-    value: Any = field(default_factory=lambda: IRLiteral(value="")) 
-    assign_to: Optional[str] = None
-    
-    def __post_init__(self):
-        self.opcode = IROpCode.FIND
-        if self.value is None:
-            self.value = IRLiteral()
-
-    def to_dict(self) -> Dict[str, Any]:
-        res = super().to_dict()
-        res.update({
-            "entity": self.entity,
-            "field": self.field,
-            "value": self.value.to_dict() if hasattr(self.value, 'to_dict') else self.value,
-        })
-        return res
+    def __init__(self, entity_name: str = "", query_field: str = "", value: Any = None, assign_to: Optional[str] = None, **kwargs):
+        super().__init__(**kwargs)
+        
+        self.entity_name = entity_name
+        self.query_field = query_field
+        
+        if value is None:
+            try:
+                self.value = IRLiteral(value="")
+            except NameError:
+                self.value = ""
+        else:
+            self.value = value
+            
+        self.assign_to = assign_to
 
 
 @dataclass
