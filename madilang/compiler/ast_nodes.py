@@ -116,17 +116,17 @@ class ASTNode:
 class FieldNode(ASTNode):
     name: str = ""
     type_name: str = ""
+    type: str = ""
     is_unique: bool = False
     is_secure: bool = False
     is_nullable: bool = False
     is_auto: bool = False
 
-
     def __post_init__(self):
-        self.is_unique = "unique" in self.modifiers
-        self.is_secure = "secure" in self.modifiers
-        self.is_optional = "optional" in self.modifiers or "?" in self.name
-        self.is_auto = "auto" in self.modifiers
+        if self.type and not self.type_name:
+            self.type_name = self.type
+        elif self.type_name and not self.type:
+            self.type = self.type_name
 
 
 @dataclass
