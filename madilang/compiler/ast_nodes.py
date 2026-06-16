@@ -112,7 +112,7 @@ class ASTNode:
     line: Optional[int] = None
     column: Optional[int] = None
 
-    def set_location(self, line: Optional[int], column: Optional[int]):
+    def set_location(self, line: Optional[int] = None, column: Optional[int] = None):
         self.line = line
         self.column = column
 
