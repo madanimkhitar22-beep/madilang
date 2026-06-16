@@ -116,12 +116,24 @@ class FieldNode(ASTNode):
     is_secure: bool = False
     is_nullable: bool = False
     is_auto: bool = False
+    modifiers: Any = None
 
-    def __post_init__(self):
+    def __init__(self, *args, **kwargs):
+        self.name = kwargs.pop('name', "")
+        self.type_name = kwargs.pop('type_name', "")
+        self.type = kwargs.pop('type', "")
         if self.type and not self.type_name:
             self.type_name = self.type
         elif self.type_name and not self.type:
             self.type = self.type_name
+            
+        self.is_unique = kwargs.pop('is_unique', False)
+        self.is_secure = kwargs.pop('is_secure', False)
+        self.is_nullable = kwargs.pop('is_nullable', False)
+        self.is_auto = kwargs.pop('is_auto', False)
+        self.modifiers = kwargs.pop('modifiers', None)
+        
+        super().__init__(**kwargs)
 
 
 @dataclass
