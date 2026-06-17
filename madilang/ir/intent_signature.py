@@ -286,10 +286,13 @@ class IntentSignatureEngine:
     def _compute_source_hash(self, source: str) -> str:
         return hashlib.sha256(source.encode("utf-8")).hexdigest()
     
-    def _compute_ast_fingerprint(self, program: ProgramNode) -> str:
+        def _compute_ast_fingerprint(self, program: ProgramNode) -> str:
+        """Compute structural fingerprint of the AST."""
         intents_extracted = []
         for i in program.intents:
-            method_name = i.method.name if hasattr(i.method, "name") else str(i.method)            intents_extracted.append({
+            method_name = i.method.name if hasattr(i.method, "name") else str(i.method)
+            
+            intents_extracted.append({
                 "name": i.name,
                 "entity": i.entity,
                 "route": i.route,
