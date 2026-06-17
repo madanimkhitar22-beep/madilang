@@ -288,14 +288,23 @@ class SignatureTransformer:
 
     def transform(self, source: str, program: ProgramNode) -> ProgramNode:
         signature = self.engine.sign_program(source, program)
-        sig_data = signature.to_dict()
+        
+        if isinstance(signature, dict):
+            sig_data = signature
+        else:
+            sig_data = signature.to_dict() if hasattr(signature, "to_dict") else vars(signature)
+            
         program.signature = sig_data
         if hasattr(program, "add_metadata"):
             program.add_metadata("sovereign_signature", sig_data)
+            
         for intent in program.intents:
             if hasattr(intent, "add_metadata"):
-                intent.add_metadata("intent_hash", signature.intent_hash)
-                intent.add_metadata("generated_at", signature.generated_at)
+                i_hash = signature.intent_hash if hasattr(signature, "intent_hash") else sig_data.get("intent", {}).get("hash", "")
+                gen_at = signature.generated_at if hasattr(signature, "generated_at") else sig_data.get("timestamp", {}).get("iso", "")
+                
+                intent.add_metadata("intent_hash", i_hash)
+                intent.add_metadata("generated_at", gen_at)
         return program
 
 def create_signature_engine(
