@@ -1,8 +1,8 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang — Command Line Interface (CLI) (Refined)
+# 🧠 MadiLang — Command Line Interface (CLI) (Refined v0.4.0)
 # ════════════════════════════════════════════════════════════════════════════
 # Sovereign CLI for compiling, running, and managing MadiLang projects.
-# Status: v0.4.0 • Sovereign-by-Design • Mobile-First
+# Status: ACTIVATED • Sovereign-by-Design • Mobile-First • Robust Parsers
 # ════════════════════════════════════════════════════════════════════════════
 
 """
@@ -256,7 +256,6 @@ steps:
                 self.logger.error(error)
             return 1
         
-        # ✅ Fixed: Resolve target destination path for build/run command polymorphism cleanly
         raw_output = getattr(args, "output", None)
         if raw_output:
             output_path = Path(raw_output)
@@ -302,20 +301,20 @@ steps:
                 ast = transformer.transform(source, ast)
                 ir = compile_to_ir(ast)
                 
-                # ✅ Fixed: Extracted signature securely using dynamic fallback boundaries
                 sig_obj = getattr(ast, "signature", getattr(getattr(ast, "program", None), "signature", None))
                 if sig_obj:
                     engine.sign_ir(ir, sig_obj)
             except Exception as e:
                 self.logger.warning(f"Signature injection failed: {e}")
         
-        self.logger.info(f"🏗️ Generating {args.target} code...")
+        target_lang = str(args.target).lower().strip()
+        self.logger.info(f"🏗️ Generating {target_lang} code...")
         try:
             config = GeneratorConfig(
                 include_signature=not getattr(args, "no_signature", False),
                 add_runtime_verification=True
             )
-            generator = get_generator(args.target, config)
+            generator = get_generator(target_lang, config)
             return generator.generate_program(ir)
         except Exception as e:
             return GenerationResult(success=False, errors=[f"Generation error: {e}"])
@@ -324,7 +323,6 @@ steps:
         self.logger.info("🚀 Starting server...")
         env = {**os.environ, "PORT": str(getattr(args, "port", 3000))}
         
-        # ✅ Fixed: Wrapped subprocess management inside proper context flows to eliminate dangling ports
         try:
             process = subprocess.Popen(["node", str(output_path)], env=env)
             return process.wait()
@@ -359,15 +357,13 @@ steps:
         try:
             content = file_path.read_text(encoding="utf-8")
             
-            # ✅ Fixed: Upgraded JSON tracking signature to isolate complex layered structural fields securely
-            sig_match = re.search(r'__MADI_SIGNATURE__\s*=\s*(\{.*?\n\s*\});', content, re.DOTALL) or \
-                        re.search(r'__MADI_SIGNATURE__\s*=\s*(\{.*?\});', content, re.DOTALL)
+            sig_match = re.search(r'__MADI_SIGNATURE__\s*=\s*(\{.*?\n\s*\});?', content, re.DOTALL) or \
+                        re.search(r'__MADI_SIGNATURE__\s*=\s*(\{.*?\});?', content, re.DOTALL)
             
             if not sig_match:
-                # Fallback block searching for pure assignments
                 lines = [line for line in content.splitlines() if "__MADI_SIGNATURE__" in line]
                 if lines:
-                    json_str = lines[0].split("=", 1)[1].strip().rstrip(";")
+                    json_str = lines[0].split("=", 1)[1].strip().rstrip(";").strip("'\"")
                     signature = json.loads(json_str)
                 else:
                     self.logger.error("No sovereign signature found in file")
@@ -450,3 +446,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
