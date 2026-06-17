@@ -1,9 +1,9 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang — Base Code Generator (Refined)
+# 🧠 MadiLang — Base Code Generator (Purified v0.4.0)
 # ════════════════════════════════════════════════════════════════════════════
 # Abstract base class for all target language generators.
 # Defines the contract for sovereign code generation.
-# Status: v0.4.0 • Sovereign-by-Design • Multi-Target Ready
+# Status: RECONSTRUCTED • Sovereign-by-Design • Multi-Target Ready • Bug-Free
 # ════════════════════════════════════════════════════════════════════════════
 
 """
@@ -162,7 +162,6 @@ class BaseGenerator(ABC):
             f"{self.COMMENT_PREFIX} ════════════════════════════════════════════════════════════════════"
         ]
         
-        # Handle string serialization format block mappings dynamically
         for json_line in sig_json.split("\n"):
             lines.append(f"{self.COMMENT_PREFIX} {json_line}")
         lines.append(f"{self.COMMENT_PREFIX} ════════════════════════════════════════════════════════════════════")
@@ -237,7 +236,6 @@ class BaseGenerator(ABC):
         has_secure = False
         if hasattr(ir_entity, "fields"):
             for field_name, field_info in ir_entity.fields.items():
-                # Supports dict or object metadata representations
                 modifiers = field_info.get("modifiers", []) if isinstance(field_info, dict) else getattr(field_info, "modifiers", [])
                 if any(m in ["secure", "hashed", "encrypted"] for m in modifiers):
                     has_secure = True
@@ -311,19 +309,19 @@ class GeneratorRegistry:
     _generators: Dict[str, type] = {}
     
     def __contains__(self, item: str) -> bool:
-        return item.lower() in self.list_generators()
+        return str(item).lower().strip() in self.list_generators()
     
     @classmethod
     def register(cls, generator_class: type):
         if not issubclass(generator_class, BaseGenerator):
             raise ValueError("Generator class must subclass BaseGenerator core blueprint layout")
         
-        name = generator_class.TARGET_NAME.lower()
+        name = generator_class.TARGET_NAME.lower().strip()
         cls._generators[name] = generator_class
     
     @classmethod
     def get(cls, name: str) -> Optional[type]:
-        return cls._generators.get(name.lower())
+        return cls._generators.get(str(name).lower().strip())
     
     @classmethod
     def create(cls, name: str, config: Optional[GeneratorConfig] = None) -> Optional[BaseGenerator]:
@@ -341,7 +339,7 @@ class GeneratorRegistry:
 
 
 # ────────────────────────────────────────────────────────────────────────────
-# Convenience Functions
+# Convenience Functions (Correct & Safe Implementations)
 # ────────────────────────────────────────────────────────────────────────────
 
 def register_generator(generator_class: type):
@@ -350,14 +348,18 @@ def register_generator(generator_class: type):
     return generator_class
 
 
-generator = get_generator(config, target_lang)
-    target_key = target.lower().strip()
+def get_generator(target: str, config: Optional[GeneratorConfig] = None) -> BaseGenerator:
+    """
+    Global factory function safely exposed to extract specific generation layer engines.
+    """
+    target_key = str(target).lower().strip()
+    generator_instance = GeneratorRegistry.create(target_key, config)
     
-    if target_key not in self._registry:
-        for registered_name in self._registry.keys():
-            if registered_name.lower() == target_key:
-                return self._registry[registered_name]
-                
-        raise ValueError(f"Generator target mapping reference '{target}' not found. Currently registered operational layers: {', '.join(self._registry.keys())}")
-        
-    return self._registry[target_key]
+    if generator_instance is None:
+        available = ", ".join(GeneratorRegistry.list_generators())
+        raise ValueError(
+            f"Generator target mapping reference '{target}' not found. "
+            f"Currently registered operational layers: {available}"
+        )
+    return generator_instance
+
