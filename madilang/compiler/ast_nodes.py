@@ -1,9 +1,9 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang — Abstract Syntax Tree Nodes
+# 🧠 MadiLang — Abstract Syntax Tree Nodes (Purified v0.4.0)
 # ════════════════════════════════════════════════════════════════════════════
 # Defines the structural representation of MadiLang source code.
 # Uses dataclasses for type safety, immutability, and clean serialization.
-# Status: v0.4.0 • Sovereign-by-Design • Mobile-First
+# Status: RECONSTRUCTED • Sovereign-by-Design • Mobile-First • Bug-Free
 # ════════════════════════════════════════════════════════════════════════════
 
 """
@@ -63,7 +63,7 @@ class StepType(Enum):
 
 
 # ────────────────────────────────────────────────────────────────────────────
-# Base Node
+# Unified Base Node (Sovereignty Layer Fixed)
 # ────────────────────────────────────────────────────────────────────────────
 
 @dataclass
@@ -73,12 +73,14 @@ class ASTNode:
     column: Optional[int] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
     
-    def set_location(self, line: int, column: int = 0) -> "ASTNode":
+    def set_location(self, line: Optional[int] = None, column: Optional[int] = None) -> "ASTNode":
         self.line = line
         self.column = column
         return self
     
     def add_metadata(self, key: str, value: Any) -> "ASTNode":
+        if self.metadata is None:
+            self.metadata = {}
         self.metadata[key] = value
         return self
 
@@ -98,24 +100,13 @@ class ProgramNode(ASTNode):
             self.entities = []
         if self.intents is None:
             self.intents = []
+        if self.metadata is None:
+            self.metadata = {}
 
 
 # ────────────────────────────────────────────────────────────────────────────
-# Entity Definitions
+# Entity & Field Definitions
 # ────────────────────────────────────────────────────────────────────────────
-
-from dataclasses import dataclass, field
-from typing import Any, List, Optional
-
-@dataclass
-class ASTNode:
-    line: Optional[int] = None
-    column: Optional[int] = None
-
-    def set_location(self, line: Optional[int] = None, column: Optional[int] = None):
-        self.line = line
-        self.column = column
-
 
 class FieldNode(ASTNode):
     def __init__(self, *args, **kwargs):
@@ -136,12 +127,13 @@ class FieldNode(ASTNode):
         
         super().__init__(
             line=kwargs.pop('line', None), 
-            column=kwargs.pop('column', None)
+            column=kwargs.pop('column', None),
+            metadata=kwargs.pop('metadata', {})
         )
         
         for key, value in kwargs.items():
             setattr(self, key, value)
-            
+
 
 @dataclass
 class EntityNode(ASTNode):
@@ -151,6 +143,8 @@ class EntityNode(ASTNode):
     def __post_init__(self):
         if self.fields is None:
             self.fields = []
+        if self.metadata is None:
+            self.metadata = {}
     
     def get_field(self, name: str) -> Optional[FieldNode]:
         for field in self.fields:
@@ -175,14 +169,16 @@ class IntentNode(ASTNode):
     inputs: List[str] = field(default_factory=list)
     steps: List["StepNode"] = field(default_factory=list)
     
-    requires_auth: bool = field(init=False)
-    required_roles: List[str] = field(init=False)
+    requires_auth: bool = field(init=False, default=False)
+    required_roles: List[str] = field(init=False, default_factory=list)
     
     def __post_init__(self):
         if self.inputs is None:
             self.inputs = []
         if self.steps is None:
             self.steps = []
+        if self.metadata is None:
+            self.metadata = {}
         
         self.requires_auth = any(
             s.step_type == StepType.AUTH_REQUIRED for s in self.steps
@@ -195,7 +191,7 @@ class IntentNode(ASTNode):
 
 @dataclass
 class StepNode(ASTNode):
-    step_type: str = ""
+    step_type: Any = ""
     args: Dict[str, Any] = field(default_factory=dict)
     body: List["StepNode"] = field(default_factory=list)
     else_body: List["StepNode"] = field(default_factory=list)
@@ -207,6 +203,8 @@ class StepNode(ASTNode):
             self.body = []
         if self.else_body is None:
             self.else_body = []
+        if self.metadata is None:
+            self.metadata = {}
     
     @classmethod
     def find(cls, entity: str, field: str, as_var: str, **kwargs) -> "StepNode":
