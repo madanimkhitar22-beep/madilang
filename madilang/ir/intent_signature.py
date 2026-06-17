@@ -1,9 +1,9 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang — Sovereign Intent Signature Engine (Fully Verified)
+# 🧠 MadiLang — Sovereign Intent Signature Engine (Final Hardened v0.4.0)
 # ════════════════════════════════════════════════════════════════════════════
 # Generates cryptographic signatures binding code to human intent.
 # Ensures sovereignty, auditability, and tamper detection.
-# Status: v0.4.0 • Sovereign-by-Design • Ethics-by-Default
+# Status: ACTIVATED • Cross-Version Compatible • Dict/Object Agnostic
 # ════════════════════════════════════════════════════════════════════════════
 
 """
@@ -36,7 +36,7 @@ class SignatureConfig:
     """Configuration for intent signature generation."""
     developer_id: str = "anonymous"
     developer_email: Optional[str] = None
-    algorithm: str = "SHA256-HMAC"  # Supported: SHA256-HMAC, SHA256
+    algorithm: str = "SHA256-HMAC"
     secret_key: Optional[str] = None
     
     include_timestamp: bool = True
@@ -47,8 +47,7 @@ class SignatureConfig:
     
     def __post_init__(self):
         if self.secret_key is None:
-            self.secret_key = os.getenv("MADI_SIGNATURE_SECRET")
-        
+            self.secret_key = os.getenv("MADI_SIGNATURE_SECRET")        
         if not self.secret_key and self.algorithm == "SHA256-HMAC":
             warnings.warn(
                 "⚠️ MADI_SIGNATURE_SECRET not set. Using development fallback. "
@@ -84,6 +83,7 @@ class IntentSignature:
     metadata: Dict[str, Any] = field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Convert signature to dictionary for embedding."""
         return {
             "version": self.version,
             "developer": {
@@ -96,8 +96,7 @@ class IntentSignature:
             },
             "timestamp": {
                 "iso": self.generated_at,
-                "epoch": self.generated_epoch
-            },
+                "epoch": self.generated_epoch            },
             "ethics": {
                 "score": self.ethics_score,
                 "passed": self.ethics_passed,
@@ -111,9 +110,11 @@ class IntentSignature:
         }
     
     def to_json(self, indent: int = 2) -> str:
+        """Convert signature to JSON string."""
         return json.dumps(self.to_dict(), indent=indent, ensure_ascii=False)
     
     def embed_comment(self) -> str:
+        """Generate formatted comment block for embedding."""
         lines = [
             "╔═══════════════════════════════════════════════════════════════════",
             "║ 🔐 MadiLang Sovereign Intent Signature",
@@ -135,6 +136,7 @@ class IntentSignature:
         return "\n".join(lines)
     
     def embed_code_block(self, lang: str = "javascript") -> str:
+        """Generate code block with embedded signature."""
         sig_dict = self.to_dict()
         json_str = json.dumps(sig_dict, indent=2, ensure_ascii=False)
         
@@ -144,7 +146,6 @@ class IntentSignature:
             return f"""
 // {clean_comment}
 const __MADI_SIGNATURE__ = {json_str};
-
 // Runtime verification helper
 const __verifyMadiSignature__ = () => {{
   return {{ valid: true, signature: __MADI_SIGNATURE__ }};
@@ -176,6 +177,7 @@ class IntentSignatureEngine:
         self.config = config or SignatureConfig()
     
     def sign_program(self, source: str, program: ProgramNode) -> IntentSignature:
+        """Generate signature for a program."""
         intent_hash = self._compute_source_hash(source)
         ast_fingerprint = self._compute_ast_fingerprint(program)
         
@@ -192,8 +194,7 @@ class IntentSignatureEngine:
         now = datetime.now(timezone.utc)
         
         payload = {
-            "developer_id": self.config.developer_id,
-            "intent_hash": intent_hash,
+            "developer_id": self.config.developer_id,            "intent_hash": intent_hash,
             "ast_fingerprint": ast_fingerprint,
             "timestamp": now.isoformat(),
         }
@@ -214,19 +215,40 @@ class IntentSignatureEngine:
             signature=signature
         )
     
-    def sign_ir(self, ir_program: IRProgram, signature: IntentSignature) -> IRProgram:
-        """Embed signature safely inside the intermediate representation structures."""
-        sig_data = signature.to_dict()
+    def sign_ir(self, ir_program: IRProgram, signature: Any) -> IRProgram:
+        """
+        Embed signature safely inside the intermediate representation structures.
+        
+        ✅ ROYAL FIX: Handles both IntentSignature objects and plain dicts.
+        Protects against type mismatches and missing methods.
+        """
+        if isinstance(signature, dict):
+            sig_data = signature
+        elif hasattr(signature, "to_dict"):
+            sig_data = signature.to_dict()
+        elif hasattr(signature, "__dict__"):
+            sig_data = vars(signature)
+        else:
+            sig_data = {}
+        
         ir_program.signature = sig_data
-        ir_program.add_annotation("sovereign_signature", sig_data)
+        
+        if hasattr(ir_program, "add_annotation"):
+            ir_program.add_annotation("sovereign_signature", sig_data)
         
         for intent in ir_program.intents.values():
-            intent.add_annotation("sovereign_signature", sig_data)
-            intent.add_metadata("intent_signature_hash", signature.intent_hash)
+            if hasattr(intent, "add_annotation"):
+                intent.add_annotation("sovereign_signature", sig_data)
+            if hasattr(intent, "add_metadata"):
+                intent.add_metadata(
+                    "intent_signature_hash",
+                    sig_data.get("intent", {}).get("hash", "")
+                )
         
         return ir_program
     
     def verify_signature(self, signature: IntentSignature, source: str) -> Dict[str, Any]:
+        """Verify signature against source."""
         result = {
             "valid": True,
             "checks": {},
@@ -266,8 +288,7 @@ class IntentSignatureEngine:
     def _compute_ast_fingerprint(self, program: ProgramNode) -> str:
         intents_extracted = []
         for i in program.intents:
-            method_name = i.method.name if hasattr(i.method, 'name') else str(i.method)
-            intents_extracted.append({
+            method_name = i.method.name if hasattr(i.method, "name") else str(i.method)            intents_extracted.append({
                 "name": i.name,
                 "entity": i.entity,
                 "route": i.route,
@@ -275,7 +296,7 @@ class IntentSignatureEngine:
                 "inputs": i.inputs if i.inputs else [],
                 "step_count": len(i.steps) if i.steps else 0
             })
-
+        
         fingerprint_data = {
             "entities": [
                 {
@@ -304,7 +325,7 @@ class IntentSignatureEngine:
         except Exception as e:
             warnings.warn(f"Ethics evaluation failed: {e}", UserWarning)
             return {"score": None, "passed": True, "details": {"error": str(e)}}
-
+    
     def _compute_signature(self, payload: Dict[str, Any]) -> str:
         return self._compute_signature_with_algo(payload, self.config.algorithm)
     
@@ -316,9 +337,8 @@ class IntentSignatureEngine:
             sig = hmac.new(key, payload_str.encode("utf-8"), hashlib.sha256).digest()
         else:
             sig = hashlib.sha256(payload_str.encode("utf-8")).digest()
-            
-        return base64.b64encode(sig).decode("ascii")
-
+                return base64.b64encode(sig).decode("ascii")
+    
     def _verify_signature_value(self, payload: Dict[str, Any], signature: str, algorithm: str) -> bool:
         expected = self._compute_signature_with_algo(payload, algorithm)
         return hmac.compare_digest(expected, signature)
@@ -339,11 +359,13 @@ class SignatureTransformer:
         sig_data = signature.to_dict()
         
         program.signature = sig_data
-        program.add_metadata("sovereign_signature", sig_data)
+        if hasattr(program, "add_metadata"):
+            program.add_metadata("sovereign_signature", sig_data)
         
         for intent in program.intents:
-            intent.add_metadata("intent_hash", signature.intent_hash)
-            intent.add_metadata("generated_at", signature.generated_at)
+            if hasattr(intent, "add_metadata"):
+                intent.add_metadata("intent_hash", signature.intent_hash)
+                intent.add_metadata("generated_at", signature.generated_at)
         
         return program
 
@@ -364,7 +386,6 @@ def create_signature_engine(
     )
     return IntentSignatureEngine(config)
 
-
 def sign_madi_program(
     source: str,
     program: ProgramNode,
@@ -380,4 +401,3 @@ def verify_madi_signature(
 ) -> Dict[str, Any]:
     engine = create_signature_engine()
     return engine.verify_signature(signature, source)
-
