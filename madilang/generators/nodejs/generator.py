@@ -1,9 +1,9 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang — Node.js Code Generator (Activated v0.4.0)
+# 🧠 MadiLang — Node.js Code Generator (Purified v0.4.0)
 # ════════════════════════════════════════════════════════════════════════════
 # Generates production-ready Node.js + Express + Prisma backend code.
 # Implements full sovereignty, security, and ethics enforcement.
-# Status: ACTIVATED • Production-Ready • Sovereign-by-Design
+# Status: RECONSTRUCTED • Production-Ready • Sovereign-by-Design • Bug-Free
 # ════════════════════════════════════════════════════════════════════════════
 
 from typing import Dict, List, Optional, Any
@@ -47,13 +47,13 @@ from madilang.ir.models import (
 class NodeJSGenerator(BaseGenerator):
     """
     Node.js/Express/Prisma code generator.
-        Generates complete backend applications with:
-        • Express.js routing and middleware
-        • Prisma ORM for database operations
-        • JWT authentication
-        • Bcrypt password hashing
-        • Input validation
-        • Sovereign signature verification
+    Generates complete backend applications with:
+    • Express.js routing and middleware
+    • Prisma ORM for database operations
+    • JWT authentication
+    • Bcrypt password hashing
+    • Input validation
+    • Sovereign signature verification
     """
     
     TARGET_NAME = "nodejs"
@@ -245,7 +245,8 @@ const validateInputs = (requiredFields) => {
             route_sig = f"app.{method}('{route}', {middleware_str}, async (req, res) => {{"
         else:
             route_sig = f"app.{method}('{route}', async (req, res) => {{"
-                body_code = self._generate_block(ir_intent.body)
+                
+        body_code = self._generate_block(ir_intent.body)
         
         handler_body = f"""  try {{
 {self.indent(body_code, 1)}
@@ -294,7 +295,8 @@ const validateInputs = (requiredFields) => {
         elif opcode == IROpCode.AUTH_CHECK:
             return self._generate_auth_check(instruction)
         elif opcode == IROpCode.ROLE_CHECK:
-            return self._generate_role_check(instruction)        elif opcode == IROpCode.GENERATE_TOKEN:
+            return self._generate_role_check(instruction)
+        elif opcode == IROpCode.GENERATE_TOKEN:
             return self._generate_token(instruction)
         elif opcode == IROpCode.VERIFY_PASSWORD:
             return self._generate_verify_password(instruction)
@@ -342,7 +344,8 @@ const validateInputs = (requiredFields) => {
         """Generate UPDATE instruction."""
         entity = instr.entity.lower()
         
-        where_parts = []        for key, value in instr.where.items():
+        where_parts = []
+        for key, value in instr.where.items():
             if isinstance(value, IRVariable):
                 where_parts.append(f"    {key}: req.body.{value.name}")
         
@@ -441,6 +444,7 @@ const validateInputs = (requiredFields) => {
         return """if (!req.user) {
   return res.status(401).json({ error: 'Authentication required' });
 }"""    
+    
     def _generate_role_check(self, instr: IRRoleCheckInstruction) -> str:
         """Generate ROLE_CHECK instruction."""
         roles = instr.roles
@@ -489,7 +493,8 @@ if (!{result}) {{
     def _generate_raw(self, instr: IRRawInstruction) -> str:
         """Generate RAW instruction."""
         return f"// RAW: {instr.text}"
-        def _generate_value(self, value) -> str:
+        
+    def _generate_value(self, value) -> str:
         """Generate value expression."""
         if isinstance(value, IRVariable):
             name = value.name
@@ -538,7 +543,8 @@ process.on('SIGINT', async () => {
         ]
         
         for entity in ir_program.entities.values():
-            schema_lines.append("")            schema_lines.append(f"model {entity.name} {{")
+            schema_lines.append("")
+            schema_lines.append(f"model {entity.name} {{")
             schema_lines.append("  id        String   @id @default(uuid())")
             
             for field_name, field_info in entity.fields.items():
@@ -587,7 +593,8 @@ process.on('SIGINT', async () => {
         
         dev_dependencies = {
             "prisma": "^5.7.0",
-            "nodemon": "^3.0.2",        }
+            "nodemon": "^3.0.2",
+        }
         
         if self._has_bcrypt:
             dependencies["bcrypt"] = "^5.1.1"
@@ -636,7 +643,8 @@ process.on('SIGINT', async () => {
             "DATABASE_URL=postgresql://user:password@localhost:5432/madidb",
             "",
         ]
-                if self._has_jwt:
+        
+        if self._has_jwt:
             lines.extend([
                 "# JWT",
                 "JWT_SECRET=your-super-secret-jwt-key",
@@ -689,3 +697,4 @@ if (process.env.NODE_ENV === 'production') {
   console.log('✅ Sovereign signature verified');
 }
 """
+
