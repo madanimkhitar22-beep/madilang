@@ -350,7 +350,7 @@ def register_generator(generator_class: type):
     return generator_class
 
 
-def get_generator(self, target: str):
+generator = get_generator(config, target_lang)
     target_key = target.lower().strip()
     
     if target_key not in self._registry:
