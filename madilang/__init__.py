@@ -47,7 +47,8 @@ __license__ = "MIT"
 __copyright__ = "© 2026 El Madani El Mkhitar. All rights reserved."
 
 # ────────────────────────────────────────────────────────────────────────────
-# Sovereign Identity# ────────────────────────────────────────────────────────────────────────────
+# Sovereign Identity
+# ────────────────────────────────────────────────────────────────────────────
 
 __philosophy__ = "Mkhitarian Ontology"
 __sovereignty__ = "Human Intent as Sovereign Layer"
@@ -132,6 +133,7 @@ def _check_environment():
     """
     import sys
     import warnings
+    import os
     
     if sys.version_info < (3, 8):
         warnings.warn(
@@ -140,12 +142,12 @@ def _check_environment():
         )
     
     # Check for JWT secret in production mode
-    import os
     if os.getenv("MADI_ENV") == "production" and not os.getenv("JWT_SECRET"):
         warnings.warn(
             "⚠️ JWT_SECRET not set in production mode. "
             "Set environment variable for secure token generation.",
             UserWarning
         )
+
 # Run environment check on import
 _check_environment()
