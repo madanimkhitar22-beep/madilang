@@ -1,5 +1,5 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang — Command Line Interface (CLI) (Refined v0.4.0)
+# 🧠 MadiLang — Command Line Interface (CLI) (Final Hardened v0.4.0)
 # ════════════════════════════════════════════════════════════════════════════
 # Sovereign CLI for compiling, running, and managing MadiLang projects.
 # Status: ACTIVATED • Sovereign-by-Design • Mobile-First • Robust Parsers
@@ -34,14 +34,17 @@ from madilang.ir.intent_signature import (
 from madilang.generators.base import get_generator, GeneratorConfig, GenerationResult
 from madilang.cli.logger import CLILogger, LogLevel
 
+import madilang.generators.nodejs.generator
+# import madilang.generators.python.generator  # Future: Python/FastAPI
+# import madilang.generators.go.generator      # Future: Go/Fiber
+
 
 # ────────────────────────────────────────────────────────────────────────────
 # CLI Application
 # ────────────────────────────────────────────────────────────────────────────
 
 class MadiCLI:
-    """MadiLang Command Line Interface managing compiler states."""
-    
+    """MadiLang Command Line Interface managing compiler states."""    
     def __init__(self):
         self.logger = CLILogger()
         self.parser = self._create_parser()
@@ -90,8 +93,7 @@ class MadiCLI:
         # ── check command ──
         check_parser = subparsers.add_parser("check", help="Analyze and validate .madi source")
         check_parser.add_argument("file", help="Path to .madi file")
-        check_parser.add_argument("--json", action="store_true", help="Output analysis as JSON")
-        
+        check_parser.add_argument("--json", action="store_true", help="Output analysis as JSON")        
         return parser
     
     def run(self, args: Optional[List[str]] = None) -> int:
@@ -140,8 +142,7 @@ class MadiCLI:
             (project_path / "examples").mkdir(exist_ok=True)
             
             main_madi = self._get_template_madi(args.template)
-            (project_path / "src" / "main.madi").write_text(main_madi, encoding="utf-8")
-            (project_path / ".env.example").write_text(self._get_env_template(), encoding="utf-8")
+            (project_path / "src" / "main.madi").write_text(main_madi, encoding="utf-8")            (project_path / ".env.example").write_text(self._get_env_template(), encoding="utf-8")
             (project_path / ".gitignore").write_text(self._get_gitignore(), encoding="utf-8")
             (project_path / "README.md").write_text(self._get_readme_template(project_name), encoding="utf-8")
             
@@ -190,8 +191,7 @@ steps:
     
     if user not found:
         show error "User not found"
-        stop process
-    
+        stop process    
     if password does not match user.password:
         show error "Invalid credentials"
         stop process
@@ -240,8 +240,7 @@ steps:
     def cmd_run(self, args) -> int:
         file_path = Path(args.file)
         if not file_path.exists():
-            self.logger.error(f"File not found: {file_path}")
-            return 1
+            self.logger.error(f"File not found: {file_path}")            return 1
         
         self.logger.info(f"📖 Reading {file_path}")
         try:
@@ -290,8 +289,7 @@ steps:
             return GenerationResult(success=False, errors=[str(err) for err in e.errors])
         
         self.logger.info("⚙️ Compiling to IR...")
-        ir = compile_to_ir(ast)
-        
+        ir = compile_to_ir(ast)        
         if not getattr(args, "no_signature", False):
             self.logger.info("🔐 Signing intent...")
             try:
@@ -340,8 +338,7 @@ steps:
             return 1
             
     def cmd_build(self, args) -> int:
-        args.no_run = True
-        return self.cmd_run(args)
+        args.no_run = True        return self.cmd_run(args)
     
     # ────────────────────────────────────────────────────────────────────────
     # Command: verify
@@ -390,8 +387,7 @@ steps:
     # Command: check
     # ────────────────────────────────────────────────────────────────────────
     
-    def cmd_check(self, args) -> int:
-        file_path = Path(args.file)
+    def cmd_check(self, args) -> int:        file_path = Path(args.file)
         if not file_path.exists():
             self.logger.error(f"File not found: {file_path}")
             return 1
@@ -440,10 +436,8 @@ steps:
 # ────────────────────────────────────────────────────────────────────────────
 
 def main() -> int:
-    cli = MadiCLI()
-    return cli.run()
+    cli = MadiCLI()    return cli.run()
 
 
 if __name__ == "__main__":
     sys.exit(main())
-
