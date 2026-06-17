@@ -147,7 +147,8 @@ class IntentSignatureEngine:
         intent_hash = self._compute_source_hash(source)
         ast_fingerprint = self._compute_ast_fingerprint(program)
         ethics_score = None
-        ethics_passed = True        ethics_details = {}
+        ethics_passed = True
+        ethics_details = {}
         if self.config.include_ethics_score and self.config.ethics_engine:
             ethics_result = self._compute_ethics_score(program)
             ethics_score = ethics_result.get("score")
@@ -196,6 +197,7 @@ class IntentSignatureEngine:
                     sig_data.get("intent", {}).get("hash", "")
                 )
         return ir_program
+
     def verify_signature(self, signature: IntentSignature, source: str) -> Dict[str, Any]:
         result = {"valid": True, "checks": {}, "warnings": []}
         computed_hash = self._compute_source_hash(source)
@@ -245,7 +247,8 @@ class IntentSignatureEngine:
                 for e in program.entities
             ],
             "intents": intents_extracted
-        }        fingerprint_str = json.dumps(fingerprint_data, sort_keys=True)
+        }
+        fingerprint_str = json.dumps(fingerprint_data, sort_keys=True)
         return hashlib.sha256(fingerprint_str.encode("utf-8")).hexdigest()[:32]
 
     def _compute_ethics_score(self, program: ProgramNode) -> Dict[str, Any]:
