@@ -184,7 +184,6 @@ class SemanticAnalyzer(ASTVisitor):
                 node
             )
         
-        # ✅ Fixed add_warning missing references by calling explicit unified wrapper
         if node.is_auto and node.type != "datetime":
             self.context.add_error(
                 f"Field '{node.name}' has 'auto' modifier but type is '{node.type}'. 'auto' belongs to datetime fields.",
@@ -263,7 +262,6 @@ class SemanticAnalyzer(ASTVisitor):
         
         elif step_type == StepType.IF_EXISTS:
             field_target = args.get("field")
-            # ✅ Fixed: Resolve validation checks against active Entity fields to avoid false positive error traps
             active_intent = self.context.intents.get(self.context.current_intent)
             associated_entity = self.context.entities.get(active_intent.entity) if active_intent else None
             
@@ -286,7 +284,6 @@ class SemanticAnalyzer(ASTVisitor):
             if not message:
                 self.context.add_error("RETURN_ERROR block omitted its verbal error message context descriptor string.", node, severity="warning")
         
-        # ✅ Scope Shielding: Create temporary memory frames for block indentation branches
         saved_scopes = set(self.context.defined_variables)
         for body_step in node.body:
             self.visit_stepnode(body_step)
