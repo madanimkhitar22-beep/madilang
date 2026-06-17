@@ -314,7 +314,7 @@ steps:
                 include_signature=not getattr(args, "no_signature", False),
                 add_runtime_verification=True
             )
-            generator = get_generator(target_lang, config)
+            generator = get_generator(target_lang, config=config)
             return generator.generate_program(ir)
         except Exception as e:
             return GenerationResult(success=False, errors=[f"Generation error: {e}"])
