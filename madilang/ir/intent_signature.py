@@ -47,7 +47,8 @@ class SignatureConfig:
 @dataclass
 class IntentSignature:
     version: str = "1.0"
-    developer_id: str = ""    developer_email: Optional[str] = None
+    developer_id: str = ""    
+    developer_email: Optional[str] = None
     intent_hash: str = ""
     ast_fingerprint: str = ""
     generated_at: str = ""
@@ -96,7 +97,8 @@ class IntentSignature:
             "╠═══════════════════════════════════════════════════════════════════",
             f"║ 👤 Developer: {self.developer_id}",
             f"║ 📅 Generated: {self.generated_at}",
-            f"║ 🔖 Intent Hash: {self.intent_hash[:32]}...",            f"║ 🧠 AST Fingerprint: {self.ast_fingerprint[:16]}...",
+            f"║ 🔖 Intent Hash: {self.intent_hash[:32]}...",            
+            f"║ 🧠 AST Fingerprint: {self.ast_fingerprint[:16]}...",
         ]
         if self.ethics_score is not None:
             ethics_bar = "█" * int(self.ethics_score * 10) + "░" * (10 - int(self.ethics_score * 10))
