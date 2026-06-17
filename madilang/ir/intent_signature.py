@@ -194,7 +194,8 @@ class IntentSignatureEngine:
         now = datetime.now(timezone.utc)
         
         payload = {
-            "developer_id": self.config.developer_id,            "intent_hash": intent_hash,
+            "developer_id": self.config.developer_id,            
+            "intent_hash": intent_hash,
             "ast_fingerprint": ast_fingerprint,
             "timestamp": now.isoformat(),
         }
