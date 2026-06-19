@@ -100,6 +100,7 @@ class NodeJSGenerator(BaseGenerator):
                 verification_code = self.generate_runtime_verification()
                 final_code += "\n\n" + verification_code
             
+            self.result.code = final_code
             self.result.add_file("index.js", final_code)
             
             if ir_program.entities:
@@ -136,8 +137,7 @@ class NodeJSGenerator(BaseGenerator):
             "// Sovereign Intent-Driven Backend",
             "",
             "import express from 'express';",
-            "import prisma_pkg from '@prisma/client';
-const { PrismaClient } = prisma_pkg;",
+            "import prisma_pkg from '@prisma/client';\nconst { PrismaClient } = prisma_pkg;",
         ]
         
         for intent in ir_program.intents.values():
