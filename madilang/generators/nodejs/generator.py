@@ -677,7 +677,20 @@ process.on('SIGINT', async () => {
 const __MADI_SIGNATURE__ = {sig_json};
 // ════════════════════════════════════════════════════════════════════
 """
-    
+    def generate_entity(self, entity: IREntity) -> str:
+        """Generate entity schema helper (Required by BaseGenerator)."""
+        return f"// Entity Schema for {entity.name} managed by Prisma ORM"
+
+    def get_runtime_helpers(self) -> str:
+        """Generate runtime helper functions (Required by BaseGenerator)."""
+        return """
+// 🛡️ MadiLang Sovereignty Runtime Helpers
+const __madi_helpers = {
+  version: "0.4.0",
+  timestamp: new Date().toISOString()
+};
+"""
+
     def generate_runtime_verification(self) -> str:
         """Generate runtime verification code."""
         return """
