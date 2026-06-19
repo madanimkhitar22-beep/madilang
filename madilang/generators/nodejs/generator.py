@@ -136,7 +136,8 @@ class NodeJSGenerator(BaseGenerator):
             "// Sovereign Intent-Driven Backend",
             "",
             "import express from 'express';",
-            "import { PrismaClient } from '@prisma/client';",
+            "import prisma_pkg from '@prisma/client';
+const { PrismaClient } = prisma_pkg;",
         ]
         
         for intent in ir_program.intents.values():
