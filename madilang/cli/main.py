@@ -276,8 +276,19 @@ steps:
             
         try:
             output_path.parent.mkdir(parents=True, exist_ok=True)
+            
             output_path.write_text(result.code, encoding="utf-8")
             self.logger.success(f"✅ Generated {output_path}")
+            
+            if hasattr(result, 'files') and result.files:
+                for name, content in result.files.items():
+                    if name in ["index.js", "output.js"]:
+                        continue
+                    file_path_extra = output_path.parent / name
+                    file_path_extra.parent.mkdir(parents=True, exist_ok=True)
+                    file_path_extra.write_text(content, encoding="utf-8")
+                    self.logger.info(f"📄 Generated {name}")
+                    
         except Exception as e:
             self.logger.error(f"Failed to write output: {e}")
             return 1
@@ -324,13 +335,33 @@ steps:
                 include_signature=not getattr(args, "no_signature", False),
                 add_runtime_verification=True
             )
-            # 🔹 استخدام الاستدعاء الملكي المحمي بالكلمات الدليليلة
             generator = get_generator(target=target_lang, config=config)
             return generator.generate_program(ir)
         except Exception as e:
             return GenerationResult(success=False, errors=[f"Generation error: {e}"])
     
     def _run_output(self, output_path: Path, args) -> int:
+        package_json = output_path.parent / "package.json"
+        node_modules = output_path.parent / "node_modules"
+        
+        if package_json.exists() and not node_modules.exists():
+            self.logger.info("📦 Installing dependencies (npm install)...")
+            try:
+                subprocess.run(
+                    ["npm", "install"],
+                    cwd=str(output_path.parent),
+                    check=True,
+                    capture_output=True,
+                    text=True
+                )
+                self.logger.success("✅ Dependencies installed successfully")
+            except subprocess.CalledProcessError as e:
+                self.logger.error(f"npm install failed: {e.stderr}")
+                return 1
+            except FileNotFoundError:
+                self.logger.error("npm command not found. Please install Node.js inside your environment.")
+                return 1
+
         self.logger.info("🚀 Starting server...")
         env = {**os.environ, "PORT": str(getattr(args, "port", 3000))}
         
@@ -457,3 +488,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
