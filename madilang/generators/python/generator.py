@@ -2,7 +2,7 @@
 # 🧠 MadiLang — Python/FastAPI Code Generator (v0.5.0 Core)
 # ════════════════════════════════════════════════════════════════════════════
 # Generates sovereign, async-ready FastAPI backends from IR.
-# Status: Phase 1 (Silent Core) • Verified & Contract-Sealed
+# Status: Phase 1 (Silent Core) • Fully Compliant with BaseGenerator
 # ════════════════════════════════════════════════════════════════════════════
 
 from typing import Dict, List, Optional, Any
@@ -48,32 +48,6 @@ class PythonFastAPIGenerator(BaseGenerator):
         }
         self._pydantic_models = []
         self._routes = []
-
-    # ════════════════════════════════════════════════════════════════════════
-    # 🔐 Concrete Implementations of Abstract Methods (Contract Sealing)
-    # ════════════════════════════════════════════════════════════════════════
-    
-    def generate_entity(self, entity_node) -> str:
-        """Required abstract method implementation."""
-        return f"# Entity: {getattr(entity_node, 'name', 'unknown')}"
-
-    def generate_instruction(self, instruction_node) -> str:
-        """Required abstract method implementation."""
-        return f"# Instruction: {getattr(instruction_node, 'opcode', 'unknown')}"
-
-    def generate_intent(self, intent_node) -> str:
-        """Required abstract method implementation."""
-        return f"# Intent: {getattr(intent_node, 'name', 'unknown')}"
-
-    def get_imports(self) -> List[str]:
-        """Required abstract method implementation."""
-        return list(self._imports)
-
-    def get_runtime_helpers(self) -> str:
-        """Required abstract method implementation."""
-        return "# MadiLang Python Runtime Helpers"
-
-    # ════════════════════════════════════════════════════════════════════════
     
     def generate_program(self, ir_program: IRProgram) -> GenerationResult:
         """Generate complete FastAPI application from IR."""
@@ -297,6 +271,7 @@ def __verify_madi_signature__():
 
 if __name__ == "__main__":
     import uvicorn
+    import os
     uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
 '''
     
@@ -310,3 +285,27 @@ if __name__ == "__main__":
             deps.append("cryptography>=41.0.0")
         return "\n".join(deps) + "\n"
 
+    # ────────────────────────────────────────────────────────────────────────
+    # Abstract Method Stubs (Required by BaseGenerator contract)
+    # These are not used in our generate_program flow but must exist.
+    # ────────────────────────────────────────────────────────────────────────
+    
+    def get_imports(self, ir_program: IRProgram) -> str:
+        """Not used directly - imports managed in generate_program."""
+        return ""
+    
+    def generate_entity(self, entity: IREntity) -> str:
+        """Not used directly - entities handled via Pydantic models."""
+        return ""
+    
+    def generate_intent(self, intent: IRIntent) -> str:
+        """Not used directly - intents handled via route generation."""
+        return ""
+    
+    def generate_instruction(self, instruction: IRInstruction) -> str:
+        """Not used directly - instructions translated inline."""
+        return ""
+    
+    def get_runtime_helpers(self) -> str:
+        """Not used directly - helpers embedded in generate_program."""
+        return ""
