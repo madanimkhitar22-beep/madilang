@@ -1,13 +1,13 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧪 Unit Test: PythonFastAPIGenerator (Silent Core Verification)
+# 🧪 Unit Test: PythonFastAPIGenerator (Silent Core Verification) - FIXED
 # ════════════════════════════════════════════════════════════════════════════
 # Tests the generator in isolation using Mock IR objects.
-# No CLI, no parser, no filesystem dependencies.
+# Resolves Abstract Class constraints and ensures public API registry usage.
 # ════════════════════════════════════════════════════════════════════════════
 
 import pytest
 from madilang.generators.python.generator import PythonFastAPIGenerator
-from madilang.generators.base import GeneratorConfig
+from madilang.generators.base import GeneratorConfig, list_generators
 from madilang.ir.models import (
     IRProgram, IREntity, IRIntent, IRBlock,
     IRCreateInstruction, IRReturnInstruction, IROpCode, IRVariable
@@ -71,22 +71,9 @@ class TestPythonFastAPIGeneratorCore:
     """Verify the silent core generates valid FastAPI code."""
     
     def test_generator_registers_correctly(self):
-        """Ensure the generator is discoverable by name dynamically."""
-        import madilang.generators.base as base_mod
-        
-        # Smart adaptive lookup for the registry dictionary
-        registry_dict = None
-        for attr in ["generator_registry", "REGISTRY", "_generator_registry", "registry"]:
-            if hasattr(base_mod, attr):
-                registry_dict = getattr(base_mod, attr)
-                break
-        
-        if registry_dict is not None:
-            assert "python" in registry_dict, "Python generator not found in registry!"
-        else:
-            # Safe structural fallback
-            assert hasattr(PythonFastAPIGenerator, "TARGET_NAME")
-            assert PythonFastAPIGenerator.TARGET_NAME == "python"
+        """Ensure the generator is discoverable via stable public API."""
+        generators = list_generators()
+        assert "python" in generators, f"Python generator not registered in: {generators}"
     
     def test_generates_valid_fastapi_code(self, mock_ir_program):
         """Core test: IR → Valid Python FastAPI code."""
@@ -138,7 +125,7 @@ class TestPythonFastAPIGeneratorCore:
         
         reqs = result.files.get("requirements.txt", "")
         assert "fastapi>=" in reqs
-        assert "uvicorn" in reqs
+        assert "uvicorn[standard]>=" in reqs
         assert "pydantic>=" in reqs
     
     def test_signature_disabled_when_configured(self, mock_ir_program):
@@ -154,3 +141,4 @@ class TestPythonFastAPIGeneratorCore:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
