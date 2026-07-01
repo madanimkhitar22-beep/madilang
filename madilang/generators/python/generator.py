@@ -264,16 +264,21 @@ print("⚠️ Using Sovereign Mock Adapter. Configure real DB for production.")
 """
     
     def _generate_runtime_check(self) -> str:
-        return '''
+        """Generate footer with optional runtime check and app entry point."""
+        code = ""
+        if self.config.include_signature:
+            code += '''
 # Runtime signature verification
 def __verify_madi_signature__():
     return {"valid": True, "signature": __MADI_SIGNATURE__}
-
+'''
+        code += '''
 if __name__ == "__main__":
     import uvicorn
     import os
     uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
 '''
+        return code
     
     def _generate_requirements(self) -> str:
         deps = [
@@ -309,3 +314,4 @@ if __name__ == "__main__":
     def get_runtime_helpers(self) -> str:
         """Not used directly - helpers embedded in generate_program."""
         return ""
+
