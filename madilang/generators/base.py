@@ -363,3 +363,12 @@ def get_generator(target: str, config: Optional[GeneratorConfig] = None) -> Base
         )
     return generator_instance
 
+
+def list_generators() -> List[str]:
+    """
+    Convenience function to list all registered generator names.
+    
+    Returns:
+        List of registered target language names.
+    """
+    return GeneratorRegistry.list_generators()
