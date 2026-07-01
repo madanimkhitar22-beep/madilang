@@ -63,7 +63,20 @@ def test_generator_registry():
     import madilang.generators.nodejs.generator  # noqa: F401
     import madilang.generators.python.generator  # noqa: F401
     
-    from madilang.generators.base import _generator_registry
+    from madilang.generators.base import GeneratorRegistry
     
-    assert "nodejs" in _generator_registry, f"nodejs not found in: {list(_generator_registry.keys())}"
-    assert "python" in _generator_registry, f"python not found in: {list(_generator_registry.keys())}"
+    registry = GeneratorRegistry.list_generators()
+    
+    assert "nodejs" in registry, f"nodejs not found in: {registry}"
+    assert "python" in registry, f"python not found in: {registry}"def test_generator_registry():
+    """Verify all generators are registered when explicitly imported."""
+    # Explicitly trigger registration for all generators
+    import madilang.generators.nodejs.generator  # noqa: F401
+    import madilang.generators.python.generator  # noqa: F401
+    
+    from madilang.generators.base import GeneratorRegistry
+    
+    registry = GeneratorRegistry.list_generators()
+    
+    assert "nodejs" in registry, f"nodejs not found in: {registry}"
+    assert "python" in registry, f"python not found in: {registry}"
