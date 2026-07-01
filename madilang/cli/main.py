@@ -1,15 +1,15 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang — Command Line Interface (CLI) (Purified v0.4.0)
+# 🧠 MadiLang — Command Line Interface (CLI) (v0.5.0)
 # ════════════════════════════════════════════════════════════════════════════
-# Sovereign CLI for compiling, running, and managing MadiLang projects.
-# Status: RECONSTRUCTED • Sovereign-by-Design • Mobile-First • Bug-Free
+# Sovereign CLI for compiling, running, diagnosing, and managing MadiLang projects.
+# Status: v0.5.0 • Sovereign-by-Design • Mobile-First • Doctor-Enabled
 # ════════════════════════════════════════════════════════════════════════════
 
 """
 MadiLang CLI
 
 This module provides the command-line interface for MadiLang.
-It enables developers to compile, run, verify, and manage MadiLang projects.
+It enables developers to compile, run, verify, diagnose, and manage MadiLang projects.
 """
 
 import sys
@@ -26,7 +26,7 @@ from typing import Optional, List, Dict, Any
 # ────────────────────────────────────────────────────────────────────────────
 try:
     import madilang.generators.nodejs.generator
-    # import madilang.generators.python.generator  
+    import madilang.generators.python.generator  # ✅ v0.5.0: Python/FastAPI generator activated
     # import madilang.generators.go.generator      
 except ImportError as e:
     pass
@@ -43,6 +43,9 @@ from madilang.ir.intent_signature import (
 )
 from madilang.generators.base import get_generator, GeneratorConfig, GenerationResult
 from madilang.cli.logger import CLILogger, LogLevel
+
+# ✅ v0.5.0: Import doctor command
+from madilang.cli.commands.doctor_cmd import run_doctor
 
 
 # ────────────────────────────────────────────────────────────────────────────
@@ -102,6 +105,9 @@ class MadiCLI:
         check_parser.add_argument("file", help="Path to .madi file")
         check_parser.add_argument("--json", action="store_true", help="Output analysis as JSON")
         
+        # ── doctor command ── ✅ v0.5.0
+        subparsers.add_parser("doctor", help="Diagnose environment, secrets, and network connectivity")
+        
         return parser
     
     def run(self, args: Optional[List[str]] = None) -> int:
@@ -121,6 +127,7 @@ class MadiCLI:
             elif parsed.command == "build": return self.cmd_build(parsed)
             elif parsed.command == "verify": return self.cmd_verify(parsed)
             elif parsed.command == "check": return self.cmd_check(parsed)
+            elif parsed.command == "doctor": return run_doctor(self.logger)  # ✅ v0.5.0
             else:
                 self.logger.error(f"Unknown command: {parsed.command}")
                 return 1
@@ -488,4 +495,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
