@@ -1,15 +1,15 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang v0.4 — Sovereign Intent-Driven Programming Language
+# 🧠 MadiLang v0.5.0 — Sovereign Intent-Driven Programming Language
 # ════════════════════════════════════════════════════════════════════════════
 # Author: El Madani El Mkhitar (madani004)
 # Philosophy: Mkhitarian Ontology — Human Intent as Sovereign Layer
-# Status: Active Development • Mobile-First • Ethics-by-Default
+# Status: Beta • Mobile-First • Ethics-by-Default • Multi-Target
 # ════════════════════════════════════════════════════════════════════════════
 
 [project]
 name = "madilang"
-version = "0.4.0"
-description = "Intent-driven programming language that generates secure backend systems from human-readable descriptions. Code is no longer written; it is described."
+version = "0.5.0"
+description = "Sovereign intent-driven programming language. Describe what you want, MadiLang generates secure, ethical, production-ready backends with cryptographic proof of origin. Mobile-first • Multi-target (Node.js + Python) • Zero-config diagnostics."
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.8"
@@ -31,11 +31,15 @@ keywords = [
     "ai",
     "low-code",
     "ethics",
-    "mobile-first"
+    "mobile-first",
+    "fastapi",
+    "nodejs",
+    "termux",
+    "diagnostics"
 ]
 
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Education",
     "License :: OSI Approved :: MIT License",
@@ -45,10 +49,14 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Code Generators",
     "Topic :: Software Development :: Compilers",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
-    "Operating System :: OS Independent"
+    "Topic :: Security :: Cryptography",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX :: Linux",
+    "Environment :: Console"
 ]
 
 dependencies = [
@@ -61,7 +69,13 @@ dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
     "black>=23.0.0",
-    "ruff>=0.1.0"
+    "ruff>=0.1.0",
+    "mypy>=1.7.0"
+]
+python = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0"
 ]
 
 [project.scripts]
@@ -69,8 +83,10 @@ madi = "madilang.cli.main:main"
 
 [project.urls]
 Homepage = "https://github.com/madanimkhitar22-beep/madilang"
-Documentation = "https://github.com/madanimkhitar22-beep/madilang/tree/main/docs"
+Documentation = "https://github.com/madanimkhitar22-beep/madilang/wiki"
 Repository = "https://github.com/madanimkhitar22-beep/madilang.git"
+Changelog = "https://github.com/madanimkhitar22-beep/madilang/blob/main/CHANGELOG.md"
+"Dev.to Article" = "https://dev.to/madanimkhitar22beep/madilang-building-a-sovereign-programming-language-entirely-on-a-smartphone-4fpo"
 "Author Profile" = "https://github.com/madanimkhitar22-beep"
 "Mkhitarian Philosophy" = "https://github.com/madanimkhitar22-beep/Mekhitarian-Philosophy"
 "Sovereign Cognition" = "https://github.com/madanimkhitar22-beep/-Sovereign-Cognition-Engine"
