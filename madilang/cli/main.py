@@ -1,14 +1,15 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang — CLI Entry Point (v0.5.0 Refactored)
+# 🧠 MadiLang — CLI Entry Point (Purified v0.5.1)
 # ════════════════════════════════════════════════════════════════════════════
 # Lightweight entry point with lazy command loading.
 # All command logic lives in cli/commands/*.py for modularity.
+# Status: CERTIFIED • Clean Architecture • Type-Safe
 # ════════════════════════════════════════════════════════════════════════════
 
 import sys
 import os
 import argparse
-from typing import Optional, List
+from typing import Optional, List, Any
 
 import madilang
 from madilang.cli.logger import CLILogger, LogLevel
@@ -84,34 +85,40 @@ class MadiCLI:
                 self.parser.print_help()
                 return 0
 
-            # 🔌 Lazy command dispatch — imports only when needed
+            result: Any = 0
+
+            # 🔌 Lazy command dispatch — imports dynamically only when invoked
             if parsed.command == "init":
                 from madilang.cli.commands.init_cmd import cmd_init
-                return cmd_init(parsed, self.logger)
+                result = cmd_init(parsed, self.logger)
 
             elif parsed.command == "run":
                 from madilang.cli.commands.run_cmd import cmd_run
-                return cmd_run(parsed, self.logger)
+                result = cmd_run(parsed, self.logger)
 
             elif parsed.command == "build":
-                from madilang.cli.commands.run_cmd import cmd_build
-                return cmd_build(parsed, self.logger)
+                # 🛡️ تم تصحيح المرجع هنا ليستدعي ملف البناء المستقل بدقة
+                from madilang.cli.commands.build_cmd import cmd_build
+                result = cmd_build(parsed, self.logger)
 
             elif parsed.command == "verify":
                 from madilang.cli.commands.verify_cmd import cmd_verify
-                return cmd_verify(parsed, self.logger)
+                result = cmd_verify(parsed, self.logger)
 
             elif parsed.command == "check":
                 from madilang.cli.commands.check_cmd import cmd_check
-                return cmd_check(parsed, self.logger)
+                result = cmd_check(parsed, self.logger)
 
             elif parsed.command == "doctor":
                 from madilang.cli.commands.doctor_cmd import run_doctor
-                return run_doctor(self.logger)
+                result = run_doctor(self.logger)
 
             else:
                 self.logger.error(f"Unknown command: {parsed.command}")
                 return 1
+
+            # ضمان إرجاع القيمة كـ Integer دائماً لإرضاء الـ Type Checkers ونظام التشغيل
+            return int(result) if result is not None else 0
 
         except KeyboardInterrupt:
             self.logger.warning("\nInterrupted by user")
