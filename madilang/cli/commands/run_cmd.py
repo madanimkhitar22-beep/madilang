@@ -109,35 +109,75 @@ def _compile(source: str, args, logger: CLILogger) -> GenerationResult:
 
 
 def _run_output(output_path: Path, args, logger: CLILogger) -> int:
-    package_json = output_path.parent / "package.json"
-    node_modules = output_path.parent / "node_modules"
-
-    if package_json.exists() and not node_modules.exists():
-        logger.info("📦 Installing dependencies (npm install)...")
+    target = str(getattr(args, "target", "nodejs")).lower().strip()
+    
+    if target == "python":
+        # ── Python/FastAPI Runner ──
+        req_file = output_path.parent / "requirements.txt"
+        venv_path = output_path.parent / ".venv"
+        
+        if req_file.exists() and not venv_path.exists():
+            logger.info("📦 Installing Python dependencies...")
+            try:
+                subprocess.run(
+                    [sys.executable, "-m", "pip", "install", "-r", str(req_file)],
+                    cwd=str(output_path.parent),
+                    check=True, capture_output=True, text=True
+                )
+                logger.success("✅ Python dependencies installed")
+            except subprocess.CalledProcessError as e:
+                logger.error(f"pip install failed: {e.stderr}")
+                return 1
+        
+        logger.info("🚀 Starting FastAPI server...")
+        env = {**os.environ, "PORT": str(getattr(args, "port", 8000))}
         try:
-            subprocess.run(["npm", "install"], cwd=str(output_path.parent), check=True, capture_output=True, text=True)
-            logger.success("✅ Dependencies installed successfully")
-        except subprocess.CalledProcessError as e:
-            logger.error(f"npm install failed: {e.stderr}")
+            process = subprocess.Popen(
+                [sys.executable, "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", str(env["PORT"])],
+                cwd=str(output_path.parent), env=env
+            )
+            return process.wait()
+        except KeyboardInterrupt:
+            logger.warning("\nStopping FastAPI server safely...")
+            if 'process' in locals():
+                process.terminate()
+                process.wait()
+            return 130
+        except Exception as e:
+            logger.error(f"FastAPI runtime failure: {e}")
             return 1
+    
+    else:
+        # ── Node.js/Express Runner (Original) ──
+        package_json = output_path.parent / "package.json"
+        node_modules = output_path.parent / "node_modules"
+        
+        if package_json.exists() and not node_modules.exists():
+            logger.info("📦 Installing dependencies (npm install)...")
+            try:
+                subprocess.run(["npm", "install"], cwd=str(output_path.parent), check=True, capture_output=True, text=True)
+                logger.success("✅ Dependencies installed successfully")
+            except subprocess.CalledProcessError as e:
+                logger.error(f"npm install failed: {e.stderr}")
+                return 1
+            except FileNotFoundError:
+                logger.error("npm command not found. Please install Node.js.")
+                return 1
+        
+        logger.info("🚀 Starting server...")
+        env = {**os.environ, "PORT": str(getattr(args, "port", 3000))}
+        try:
+            process = subprocess.Popen(["node", str(output_path)], env=env)
+            return process.wait()
+        except KeyboardInterrupt:
+            logger.warning("\nStopping sovereign background server node safely...")
+            if 'process' in locals():
+                process.terminate()
+                process.wait()
+            return 130
         except FileNotFoundError:
-            logger.error("npm command not found. Please install Node.js.")
+            logger.error("Node.js not found. Install Node.js to run the output.")
             return 1
-
-    logger.info("🚀 Starting server...")
-    env = {**os.environ, "PORT": str(getattr(args, "port", 3000))}
-    try:
-        process = subprocess.Popen(["node", str(output_path)], env=env)
-        return process.wait()
-    except KeyboardInterrupt:
-        logger.warning("\nStopping sovereign background server node safely...")
-        if 'process' in locals():
-            process.terminate()
-            process.wait()
-        return 130
-    except FileNotFoundError:
-        logger.error("Node.js not found. Install Node.js to run the output.")
-        return 1
-    except Exception as e:
-        logger.error(f"Server runtime failure: {e}")
-        return 1
+        except Exception as e:
+            logger.error(f"Server runtime failure: {e}")
+            return 1
