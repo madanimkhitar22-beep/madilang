@@ -49,6 +49,27 @@ class PythonFastAPIGenerator(BaseGenerator):
         self._pydantic_models = []
         self._routes = []
     
+
+    def format_value(self, value):
+        """Python-specific value formatting (None instead of null)."""
+        if value is None:
+            return "None"
+        elif isinstance(value, bool):
+            return "True" if value else "False"
+        elif isinstance(value, str):
+            return repr(value)
+        elif isinstance(value, (int, float)):
+            return str(value)
+        elif isinstance(value, list):
+            items = ", ".join(self.format_value(v) for v in value)
+            return f"[{items}]"
+        elif isinstance(value, dict):
+            items = ", ".join(
+                f"{repr(k)}: {self.format_value(v)}" for k, v in value.items()
+            )
+            return f"{{{items}}}"
+        return repr(value)
+
     def generate_program(self, ir_program: IRProgram) -> GenerationResult:
         """Generate complete FastAPI application from IR."""
         self.reset()
@@ -219,7 +240,7 @@ async def {func_name}({input_param.lstrip(', ')}):
         if not self.config.include_signature or not ir_program.signature:
             return "# No signature embedded"
         
-        sig_json = json.dumps(ir_program.signature, indent=2, ensure_ascii=False)
+        sig_json = json.dumps(ir_program.signature, indent=2, ensure_ascii=False).replace(": null", ": None").replace(": true", ": True").replace(": false", ": False")
         return f"""# ════════════════════════════════════════════════════════════════════
 # 🔐 MadiLang Sovereign Intent Signature
 # ════════════════════════════════════════════════════════════════════

@@ -8,7 +8,7 @@
 
 [project]
 name = "madilang"
-version = "0.5.0"
+version = "0.5.1"
 description = "Sovereign intent-driven programming language. Describe what you want, MadiLang generates secure, ethical, production-ready backends with cryptographic proof of origin. Mobile-first • Multi-target (Node.js + Python) • Zero-config diagnostics."
 readme = "README.md"
 license = { text = "MIT" }
