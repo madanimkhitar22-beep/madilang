@@ -31,13 +31,16 @@ def cmd_run(args, logger: CLILogger) -> int:
             logger.error(error)
         return 1
 
+    target = str(getattr(args, "target", "nodejs")).lower().strip()
+    default_filename = "main.py" if target == "python" else "output.js"
+    
     raw_output = getattr(args, "output", None)
     if raw_output:
         output_path = Path(raw_output)
         if output_path.is_dir():
-            output_path = output_path / ("index.js" if args.target == "nodejs" else "main.py")
+            output_path = output_path / default_filename
     else:
-        output_path = Path("output.js")
+        output_path = Path(default_filename)
 
     try:
         output_path.parent.mkdir(parents=True, exist_ok=True)
