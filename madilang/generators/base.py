@@ -1,5 +1,5 @@
 # ════════════════════════════════════════════════════════════════════════════
-# 🧠 MadiLang — Base Code Generator (Purified v0.4.0)
+# 🧠 MadiLang — Base Code Generator (Purified v0.5.1)
 # ════════════════════════════════════════════════════════════════════════════
 # Abstract base class for all target language generators.
 # Defines the contract for sovereign code generation.
@@ -18,6 +18,7 @@ from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field
 from pathlib import Path
 import json
+import sys
 
 from madilang.ir.models import IRProgram, IRIntent, IREntity, IRInstruction, IRNode
 
@@ -89,7 +90,7 @@ class BaseGenerator(ABC):
     """Abstract structural foundational base class for language-specific emitters."""
     
     TARGET_NAME: str = "base"
-    TARGET_VERSION: str = "0.4.0"
+    TARGET_VERSION: str = "0.5.1"
     FILE_EXTENSION: str = ".txt"
     COMMENT_PREFIX: str = "//"
     
@@ -307,6 +308,7 @@ class GeneratorRegistry:
     """Registry engine tracking registered concrete compiler output generator systems."""
     
     _generators: Dict[str, type] = {}
+    _core_targets: List[str] = ["nodejs", "python", "go"]
     
     def __contains__(self, item: str) -> bool:
         return str(item).lower().strip() in self.list_generators()
@@ -321,7 +323,23 @@ class GeneratorRegistry:
     
     @classmethod
     def get(cls, name: str) -> Optional[type]:
-        return cls._generators.get(str(name).lower().strip())
+        target_key = str(name).lower().strip()
+        
+        # Smart dynamic trigger to safely handle lazy CLI loading architectures
+        if target_key not in cls._generators and target_key in cls._core_targets:
+            try:
+                if target_key == "python":
+                    import madilang.generators.python.generator
+                elif target_key == "nodejs":
+                    import madilang.generators.nodejs.generator
+            except ModuleNotFoundError as e:
+                missing_mod = e.name if hasattr(e, 'name') else str(e)
+                raise ImportError(
+                    f"Target operational layer '{target_key}' is missing required dependencies: '{missing_mod}'. "
+                    f"Please run: pip install {missing_mod} (or setup the environment via: pip install madilang[python])"
+                ) from e
+                
+        return cls._generators.get(target_key)
     
     @classmethod
     def create(cls, name: str, config: Optional[GeneratorConfig] = None) -> Optional[BaseGenerator]:
@@ -332,10 +350,8 @@ class GeneratorRegistry:
     
     @classmethod
     def list_generators(cls) -> List[str]:
-        keys = list(cls._generators.keys())
-        if not keys:
-            return ["nodejs", "go", "python"]
-        return keys
+        # Merges core operational layers with manually injected runtime plugins seamlessly
+        return sorted(list(set(cls._core_targets + list(cls._generators.keys()))))
 
 
 # ────────────────────────────────────────────────────────────────────────────
@@ -353,7 +369,11 @@ def get_generator(target: str, config: Optional[GeneratorConfig] = None) -> Base
     Global factory function safely exposed to extract specific generation layer engines.
     """
     target_key = str(target).lower().strip()
-    generator_instance = GeneratorRegistry.create(target_key, config)
+    
+    try:
+        generator_instance = GeneratorRegistry.create(target_key, config)
+    except ImportError as e:
+        raise ValueError(f"Generation error: {str(e)}") from e
     
     if generator_instance is None:
         available = ", ".join(GeneratorRegistry.list_generators())
@@ -372,3 +392,4 @@ def list_generators() -> List[str]:
         List of registered target language names.
     """
     return GeneratorRegistry.list_generators()
+
