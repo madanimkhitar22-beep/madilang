@@ -45,7 +45,7 @@ Links:
 # Package Metadata
 # ────────────────────────────────────────────────────────────────────────────
 
-__version__ = "0.5.1"
+__version__ = "0.5.2"
 __author__ = "El Madani El Mkhitar"
 __email__ = "madani004@proton.me"
 __license__ = "MIT"
