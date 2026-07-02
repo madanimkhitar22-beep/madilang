@@ -1,5 +1,6 @@
 """MadiLang CLI — run & build commands."""
 
+import sys
 import os
 import subprocess
 from pathlib import Path
