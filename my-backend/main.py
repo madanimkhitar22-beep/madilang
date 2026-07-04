@@ -20,13 +20,13 @@ __MADI_SIGNATURE__ = {
     "fingerprint": "a96955eacbd0db663e4ada44625d273a"
   },
   "timestamp": {
-    "iso": "2026-07-02T18:31:07.634411+00:00",
-    "epoch": 1783017067
+    "iso": "2026-07-03T20:16:33.813118+00:00",
+    "epoch": 1783109793
   },
   "ethics": None,
   "signature": {
     "algorithm": "SHA256-HMAC",
-    "value": "+XrNVEldKPoeVjSaNTUEfehVhcn78XkT6IkFSJyiLDU="
+    "value": "vY4lCES4CGPWVUsf9kjvECdvbqbnBczgIXb887iQytE="
   },
   "metadata": {}
 }
