@@ -145,8 +145,9 @@ class EthicsScore:
             "critical_count": sum(1 for f in self.findings if f.severity == EthicsSeverity.CRITICAL),
             "high_count": sum(1 for f in self.findings if f.severity == EthicsSeverity.HIGH),
         }
-        def get_bar(self, width: int = 20) -> str:
-        """Generate visual score bar."""
+
+    def get_bar(self, width: int = 20) -> str:
+        """Generate a visual bar for the overall score."""
         filled = int(self.overall * width)
         return "█" * filled + "░" * (width - filled)
 
@@ -339,6 +340,7 @@ class EthicsHookPlugin(BasePlugin):
         # Check for critical findings
         if any(f.severity == EthicsSeverity.CRITICAL for f in findings):
             passed = False
+            overall = min(overall, 0.30)  # a critical finding can never score well
         
         return EthicsScore(
             overall=overall,            dimensions=dimension_scores,
@@ -390,7 +392,8 @@ class EthicsHookPlugin(BasePlugin):
             ))
         
         return findings
-        def _analyze_intent(self, intent: IntentNode) -> List[EthicsFinding]:
+
+    def _analyze_intent(self, intent: IntentNode) -> List[EthicsFinding]:
         """Analyze intent for ethical issues."""
         findings = []
         loc = f"intent:{intent.name}"
@@ -543,3 +546,16 @@ class EthicsHookPlugin(BasePlugin):
         
         # Add findings count
         program.add_metadata("ethics_findings", len(score.findings))
+
+
+# ────────────────────────────────────────────
+# Public entry point (used by the CLI and by tests)
+# ────────────────────────────────────────────
+
+def evaluate_ethics(program: ProgramNode, threshold: float = DEFAULT_THRESHOLD) -> Dict[str, Any]:
+    """Evaluate a parsed program and return a plain-dict ethics report."""
+    plugin = EthicsHookPlugin({"threshold": threshold})
+    score = plugin._analyze_ast(program)
+    report = score.to_dict()
+    report["bar"] = score.get_bar(10)
+    return report

@@ -497,5 +497,9 @@ class MadiParser:
 
 
 def parse_madi(source: str) -> ProgramNode:
+    # Strip a UTF-8 BOM: editors on Windows add it, and it silently
+    # breaks the first `entity:`/`intent:` line. (Observed in the wild.)
+    if source.startswith("\ufeff"):
+        source = source[1:]
     parser = MadiParser(source)
     return parser.parse()
