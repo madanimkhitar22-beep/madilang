@@ -1,0 +1,13 @@
+entity: Account
+fields:
+  - name: string
+  - password: string
+
+intent: admin_delete_account
+route: "/api/admin/delete"
+method: DELETE
+inputs: (name)
+
+steps:
+  create Account
+  return success

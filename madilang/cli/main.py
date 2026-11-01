@@ -97,7 +97,7 @@ class MadiCLI:
                 result = cmd_run(parsed, self.logger)
 
             elif parsed.command == "build":
-                # 🛡️ تم تصحيح المرجع هنا ليستدعي ملف البناء المستقل بدقة
+                # 🛡️ Import fixed here: dispatch to the standalone build command module.
                 from madilang.cli.commands.build_cmd import cmd_build
                 result = cmd_build(parsed, self.logger)
 
@@ -117,7 +117,7 @@ class MadiCLI:
                 self.logger.error(f"Unknown command: {parsed.command}")
                 return 1
 
-            # ضمان إرجاع القيمة كـ Integer دائماً لإرضاء الـ Type Checkers ونظام التشغيل
+            # Always return an int: satisfies type checkers and the exit-code contract.
             return int(result) if result is not None else 0
 
         except KeyboardInterrupt:
