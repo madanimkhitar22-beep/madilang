@@ -3,7 +3,7 @@
 # ════════════════════════════════════════════════════════════════════════════
 # Transforms validated AST into language-agnostic Intermediate Representation.
 # IR is the sovereign layer where intent becomes executable structure.
-# Status: v0.4.0 • Sovereign-by-Design • Multi-Target Ready
+# Status: v0.5.4 • Sovereign-by-Design • Multi-Target Ready
 # ════════════════════════════════════════════════════════════════════════════
 
 """
@@ -138,13 +138,13 @@ class StepCompiler:
         
         ir_intent = IRIntent(
             name=intent.name,
-            entity=intent.entity,
             route=intent.route,
             method=intent.method.name if hasattr(intent.method, 'name') else str(intent.method),
             inputs=intent.inputs.copy() if intent.inputs else [],
             requires_auth=intent.requires_auth,
             required_roles=intent.required_roles.copy() if intent.required_roles else []
         )
+        ir_intent.entity = intent.entity
         
         ir_intent.source_line = intent.line
         ir_intent.metadata = intent.metadata.copy() if intent.metadata else {}
@@ -178,22 +178,23 @@ class StepCompiler:
         # ────────────────────────────────────────────────────────────────────
         
         if step_type == StepType.FIND:
-            entity = args.get("entity", "")
-            field = args.get("field", "")
-            as_var = args.get("as", "result")
-            # ✅ Fixed: Resolve value pointer dynamically to prevent hardcoded collisions
-            value_source = args.get("value", field)
+            # ✅ IRFindInstruction has custom __init__: entity_name, query_field, value, assign_to
+            entity_name = args.get("entity", "")
+            query_field = args.get("field", "")
+            assign_to = args.get("as", "result")
+            value_source = args.get("value", query_field)
             
             instr = IRFindInstruction(
-                entity=entity,
-                field=field,
+                entity_name=entity_name,
+                query_field=query_field,
                 value=IRVariable(name=value_source),
-                result=as_var
+                assign_to=assign_to
             )
             instructions.append(set_meta(instr))
-            self.context.register_variable(as_var, entity)
+            self.context.register_variable(assign_to, entity_name)
         
         elif step_type == StepType.CREATE:
+            # ✅ IRCreateInstruction is @dataclass with fields: entity, data, result
             entity = args.get("entity", "")
             data: Dict[str, IRValue] = {}
             entity_node = self.context.entities.get(entity)
@@ -203,12 +204,16 @@ class StepCompiler:
                     if f.name in self.context.defined_variables:
                         data[f.name] = IRVariable(name=f.name)
             
-            instr = IRCreateInstruction(entity=entity, data=data, result=args.get("as", "result"))
+            instr = IRCreateInstruction(
+                entity=entity,
+                data=data,
+                result=args.get("as", "result")
+            )
             instructions.append(set_meta(instr))
         
         elif step_type == StepType.UPDATE:
+            # ✅ IRUpdateInstruction is @dataclass with fields: entity, where, data
             entity = args.get("entity", "")
-            # ✅ Fixed: Extract actual criteria arrays instead of generating blind bulk queries
             where_field = args.get("where_field", "id")
             where_val = args.get("where_value", "id")
             
@@ -221,17 +226,25 @@ class StepCompiler:
                     if f.name in self.context.defined_variables and f.name != where_field:
                         update_data[f.name] = IRVariable(name=f.name)
             
-            instr = IRUpdateInstruction(entity=entity, where=where_clause, data=update_data)
+            instr = IRUpdateInstruction(
+                entity=entity,
+                where=where_clause,
+                data=update_data
+            )
             instructions.append(set_meta(instr))
         
         elif step_type == StepType.DELETE:
+            # ✅ IRDeleteInstruction is @dataclass with fields: entity, where
             entity = args.get("entity", "")
-            # ✅ Fixed: Map clear scoping conditions to restrict target destruction boundaries
             where_field = args.get("where_field", "id")
             where_val = args.get("where_value", "id")
             
             where_clause = {where_field: IRVariable(name=where_val)}
-            instr = IRDeleteInstruction(entity=entity, where=where_clause)
+            
+            instr = IRDeleteInstruction(
+                entity=entity,
+                where=where_clause
+            )
             instructions.append(set_meta(instr))
         
         # ────────────────────────────────────────────────────────────────────
@@ -303,7 +316,6 @@ class StepCompiler:
         elif step_type == StepType.PASSWORD_CHECK:
             var = args.get("var", "")
             field_name = args.get("field", "password")
-            # ✅ Fixed: Removed hardcoded input binding to resolve fluid user naming schemas
             input_secret = args.get("input_secret", "password")
             
             instr = IRVerifyPasswordInstruction(
@@ -314,6 +326,7 @@ class StepCompiler:
             instructions.append(set_meta(instr))
         
         elif step_type == StepType.GENERATE_TOKEN:
+            # ✅ IRGenerateTokenInstruction uses 'result' (inherited), not 'assign_to'
             instr = IRGenerateTokenInstruction(
                 payload={"id": IRVariable(name="user.id")},
                 result=args.get("as", "token")
