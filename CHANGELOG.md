@@ -7,12 +7,69 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## 🚀 [v0.6.0] — Deterministic Builds & Sovereign Specifications — 2026-11-04
+
+> 🛡️ **"Sovereignty is proven by reproducibility."**
+> 📜 **"The specification is the law; the code is the witness."**
+
+This release establishes the foundation for 100% reproducible builds, completes the `madi build` command pipeline, and elevates project documentation to authoritative, production-grade standards.
+
+### 🌟 Highlights
+
+- 🏗️ **`madi build` Completed**: Fully functional compilation to target code without execution, laying the groundwork for the `--reproducible` flag.
+- 🛡️ **Cross-Platform Determinism**: Added `.gitattributes` to enforce `LF` line endings globally, guaranteeing byte-for-byte hash consistency across Windows, macOS, and Linux.
+- 📜 **Authoritative Specifications**: `SPEC.md` elevated to v1.0 with explicit "Sovereign Guarantees", and `ROADMAP.md` restructured for professional clarity.
+- 🔧 **IR Pipeline Stabilized**: Fixed critical signature mismatches in `step_compiler.py` to align perfectly with `models.py` dataclass definitions.
+
+---
+
+### ✨ Added
+
+#### 🏗️ Build Command
+- `madilang/cli/commands/build_cmd.py`: New command module that parses, analyzes, compiles to IR, signs, and generates target code **without** invoking the runtime server.
+- Integrated `sign_madi_program` correctly within the build pipeline to attach sovereign metadata before file generation.
+
+#### 🛡️ Infrastructure
+- `.gitattributes`: Enforces `text=auto eol=lf` for all source files (`.py`, `.madi`, `.md`, `.toml`, etc.), preventing CRLF/LF hash mismatches in CI/CD and local environments.
+
+#### 📜 Documentation
+- `SPEC.md` v1.0: Removed open questions; added Section 10 "Sovereign Guarantees & Design Decisions" explicitly defining cryptographic identity, escape hatch protocols, and reproducibility contracts.
+- `ROADMAP.md` v1.0: Consolidated Phase 0 achievements, renumbered phases, and established strict "Exit criteria" for each milestone.
+
+---
+
+### 🔄 Changed
+
+#### 🏗️ Architecture
+- `madilang/ir/step_compiler.py`: Corrected IR instruction instantiation to match actual class signatures (e.g., `IRFindInstruction` now correctly uses `entity_name`, `query_field`, `assign_to`; `IRCreateInstruction` uses `entity`, `data`, `result`).
+- `madilang/__init__.py`: Bumped `__version__` to `"0.6. "`, updated status banner, and added `madi build` to CLI usage examples.
+- `pyproject.toml`: Bumped version to `"0.6.0"`, updated description to highlight "Deterministic & Reproducible builds", and added relevant keywords.
+
+---
+
+### 🐛 Fixed
+
+- Resolved `ImportError` and `TypeError` in the IR compilation pipeline caused by mismatched parameter names between `step_compiler.py` and `models.py`.
+- Ensured `madi build` gracefully handles the `MADI_SIGNATURE_SECRET` development fallback warning without crashing.
+
+---
+
+## 🚀 [v0.5.4] — Registry Stability & Documentation Cleanup — 2026-07-04
+
+> 📦 **"Clean docs, clean registry, clean history."**
+
+- 📝 **README.md**: Fully cleaned, synchronized, and formatted for v0.5.3/0.5.4 parity.
+- 🧹 **Repository Hygiene**: Removed `my-backend/` development artifacts from version control and added to `.gitignore`.
+- 📦 **PyPI**: Confirmed stable publication of `madilang==0.5.4`.
+
+---
+
 ## 🚀 [v0.5.0] — Multi-Target Sovereignty & Diagnostics — 2026-06-21
 
 > 🐍 **"Sovereignty speaks every language."**
 > 🩺 **"Trust is verified, not assumed."**
 
-This release transforms MadiLang from a single-target tool into a **multi-target sovereign platform**. With Python/FastAPI support, instant environment diagnostics, and a modular CLI architecture, MadiLang now delivers production-ready backends across ecosystems while maintaining cryptographic proof of origin.
+This release transformed MadiLang from a single-target tool into a **multi-target sovereign platform**. With Python/FastAPI support, instant environment diagnostics, and a modular CLI architecture, MadiLang now delivers production-ready backends across ecosystems while maintaining cryptographic proof of origin.
 
 ### 🌟 Highlights
 
@@ -23,94 +80,14 @@ This release transforms MadiLang from a single-target tool into a **multi-target
 - ✅ **10/10 CI Checks**: All tests passing across Python 3.8–3.13 including mobile validation.
 - 📱 **Mobile-First Verified**: Full development cycle tested on Termux/Android.
 
----
-
-### ✨ Added
-
-#### 🐍 Python/FastAPI Generator
-- `madilang/generators/python/generator.py`: Complete FastAPI code generator with async handlers.
-- Pydantic model generation from entity definitions with type mapping.
-- Automatic input validation via Pydantic schemas.
-- Uvicorn server setup with configurable port.
-- `requirements.txt` generation with FastAPI, Uvicorn, and Pydantic dependencies.
-- Hybrid database adapter with in-memory mock fallback.
-- Sovereign signature embedding in Python comment syntax.
-- Runtime verification helper (`__verify_madi_signature__`).
-
-#### 🩺 Diagnostics System
-- `madilang/diagnostics/environment.py`: Python, Node.js, npm version checks + write permissions + platform detection.
-- `madilang/diagnostics/secrets.py`: Sovereign secrets validation with masking and strength checks.
-- `madilang/diagnostics/network.py`: Connectivity testing for npm registry, PyPI, and GitHub API.
-- `madilang/cli/commands/doctor_cmd.py`: Unified diagnostic command with colored output and exit codes.
-- Termux/mobile platform detection and reporting.
-
-#### 🏗️ Modular CLI Architecture
-- `madilang/cli/commands/init_cmd.py`: Project initialization module.
-- `madilang/cli/commands/run_cmd.py`: Compilation and execution module with auto-dependency installation.
-- `madilang/cli/commands/build_cmd.py`: Build-only compilation module.
-- `madilang/cli/commands/verify_cmd.py`: Signature verification module.
-- `madilang/cli/commands/check_cmd.py`: Source analysis and validation module.
-- Lazy import dispatch in `main.py` for reduced memory footprint.
-
-#### 🧪 Testing
-- `tests/test_python_generator_unit.py`: Isolated unit tests for Python generator with Mock IR.
-- Abstract method stubs for BaseGenerator contract compliance.
-- Generator registration verification tests.
-
----
-
-### 🔄 Changed
-
-#### 🏗️ Architecture
-- Refactored `madilang/cli/main.py` from monolithic (~500 lines) to modular dispatcher (~120 lines).
-- Moved all command logic to independent modules in `madilang/cli/commands/`.
-- Updated `madilang/__init__.py` to expose `run_diagnostics` and multi-target `get_generator`.
-- Bumped `__version__` to `"0.5.0"`.
-
-#### 📦 Configuration
-- Updated `pyproject.toml` to v0.5.0 with Python 3.13 classifier.
-- Added `python` optional dependency group for FastAPI/Uvicorn/Pydantic.
-- Added Dev.to article and Changelog URLs to project metadata.
-- Expanded keywords: `fastapi`, `termux`, `diagnostics`.
-- Upgraded Development Status from Alpha to Beta.
-
-#### 🛡️ Generator Base
-- Added `list_generators()` convenience function to `madilang/generators/base.py`.
-- Enhanced `GenerationResult` with structured error reporting.
-
----
-
-### 🧭 Migration Guide from v0.4.0
-
-#### For Users
-No breaking changes! All existing `.madi` files and commands work as before. New features are additive:
-
-```bash
-# Use new Python target
-madi run src/main.madi --target python
-
-# Diagnose your environment
-madi doctor
-```
-
-#### For Developers
-If you extended the CLI directly, update imports:
-
-```python
-# Old (v0.4.0)
-from madilang.cli.main import MadiCLI
-
-# New (v0.5.0) — Commands are now modular
-from madilang.cli.commands.run_cmd import cmd_run
-from madilang.cli.commands.doctor_cmd import run_doctor
-```
+*(Note: Full v0.5.0 and v0.4.0 details remain preserved in the repository history.)*
 
 ---
 
 ## 🏛️ [v0.4.0] — Sovereign Architecture Rewrite — 2026-06-14
 
 > ✨ **"Code is no longer written. It is described."**
-> 🔐 **"Sovereignty is no longer optional. It is embedded."**
+> 🔐 **"Sovereignty is no longer optional. it is embedded."**
 
 Complete architecture rewrite establishing sovereign, extensible, and production-ready foundation.
 
@@ -124,70 +101,21 @@ Complete architecture rewrite establishing sovereign, extensible, and production
 - 🤖 VSCode Extension with syntax highlighting
 - 🔄 CI/CD Pipeline with 10 automated checks
 
-<details>
-<summary>📋 Full v0.4.0 Details</summary>
-
-### Added
-- `madilang/ir/intent_signature.py`: Cryptographic signature engine
-- `madilang/plugins/`: Plugin system with ethics and security hooks
-- `madilang/compiler/`: Recursive descent parser + semantic analyzer
-- `madilang/ir/`: Language-agnostic IR with opcode-based instructions
-- `madilang/generators/nodejs/`: Express/Prisma generator with hybrid adapter
-- `madilang/stdlib/`: Auth (JWT/bcrypt) and validation libraries
-- `madilang/cli/`: Complete CLI with init, run, build, verify, check
-- `tools/vscode-madilang/`: VSCode extension
-
-### Changed
-- Migrated from flat structure to modular package layout
-- Replaced regex parser with recursive descent parser
-- Moved JWT engine to stdlib with enhanced security
-
-### Breaking Changes
-- Package structure changed from root-level to `madilang/` package
-- CLI changed from `python cli.py` to `madi` command
-- Route values must be quoted: `route: "/api/path"`
-
-### Removed
-- `core/`, `generator/`, `cli.py`, `runner.py`, root `step_compiler.py`
-
-</details>
-
----
-
-## 📦 Previous Versions
-
-### [v0.3.0] — Authentication & IR System — 2026-04-15
-- JWT authentication support in generated code
-- Basic IR representation for step compilation
-- Password hashing with bcrypt
-- Input validation generation
-
-### [v0.2.0] — Code Generation — 2026-03-01
-- Node.js/Express code generation
-- Prisma schema generation
-- Basic CLI with file execution
-
-### [v0.1.0] — Initial Release — 2026-02-01
-- Basic parser for `.madi` files
-- Entity and intent definitions
-- Simple code generation prototype
-
 ---
 
 ## 🔮 Roadmap
 
-### v0.6.0 (Next)
-- 📚 OpenAPI/Swagger auto-documentation generation
-- 🧪 Auto-testing generator from intents (pytest/jest)
-- 🔄 `madi watch` mode for live reload during development
-- 📦 PyPI publication (`pip install madilang`)
+### v0.7.0 (Next)
+- 🔄 **Reproducibility Flag**: `madi build --reproducible` producing byte-identical outputs with `.sig` sidecar files.
+- 🔐 **Cryptographic Maturity**: Transition from HMAC-SHA256 to Ed25519 for non-repudiable signatures.
+- 🛡️ **Security Hook**: Wire `security_hook` with deep data-flow analysis (beyond keyword matching).
+- 📚 **Auto-Documentation**: OpenAPI/Swagger generation directly from `.madi` intents.
 
 ### v1.0.0 (Vision)
-- 🦀 Go/Fiber generator for multi-language parity
-- 🔗 Pi Network integration for decentralized deployment
-- 🧠 Sovereign-Cognition-Engine deep integration
-- 🌍 Community plugin ecosystem and registry
-- 🎨 Full LSP support for VSCode with autocomplete
+- 🦀 **Go/Fiber Generator**: Multi-language parity.
+- 🎨 **Full LSP Support**: VSCode extension with real-time diagnostics and autocomplete.
+- 🌍 **Ecosystem**: Community plugin registry and decentralized deployment integrations.
+- ✅ **Definition of Done**: Two stable targets, 100% reproducible builds, verified cryptographic chain, and a working escape hatch.
 
 ---
 
