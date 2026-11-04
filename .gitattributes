@@ -1,0 +1,16 @@
+﻿# ═══════════════════════════════════════════════════════════
+# 🛡️ MadiLang Line Ending Policy (Determinism Guarantee)
+# ═══════════════════════════════════════════════════════════
+# Force LF (Line Feed) for all text files to ensure 
+# identical file hashes across Windows, macOS, and Linux.
+
+* text=auto eol=lf
+
+# Explicit rules for critical project files
+*.py text eol=lf
+*.madi text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
+*.toml text eol=lf
