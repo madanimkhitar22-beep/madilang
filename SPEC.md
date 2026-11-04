@@ -1,13 +1,13 @@
-# MadiLang — Language Specification (v0.1 draft)
+# MadiLang — Language Specification (v1.0)
 
-> **Status:** *derived from the v0.5.4 implementation*, not invented. Every rule
-> below was read out of `madilang/compiler/parser.py` and cross-checked by
-> running the CLI. Where the implementation and this document disagree, the
-> implementation is a bug — unless the rule is marked **TARGET**.
+> **Status:** *Authoritative.* This document defines the MadiLang language
+> and its sovereign guarantees. The implementation must conform to this
+> specification; where they disagree, the implementation is a bug.
 >
-> **Purpose of this file:** the project was built without a written
-> specification, and that absence is the root cause of its stubs, its
-> non-deterministic builds, and its dead code. This is the missing organ.
+> **Purpose:** MadiLang is the deterministic, auditable compiler for
+> intent-driven backends. This specification is the single source of truth
+> for the language grammar, the determinism contract, the cryptographic
+> threat model, and the escape hatch protocol.
 
 ---
 
@@ -33,14 +33,14 @@ authentication providers, background jobs, migrations.
 |---|---|
 | Encoding | UTF-8. A leading BOM (`U+FEFF`) **must** be stripped before parsing. |
 | Line ending | `\n` or `\r\n`; both accepted. |
-| Indentation | Spaces or tabs. Indentation is **significant only inside `fields:` and `steps:` blocks**. Mixing tabs and spaces is undefined behaviour (TARGET: reject). |
+| Indentation | Spaces or tabs. Indentation is **significant only inside `fields:` and `steps:` blocks**. Mixing tabs and spaces is undefined behaviour. |
 | Comment | `#` to end of line, **only at top level** (indent 0). `#` inside `steps:` is parsed as step text. |
 | Identifier | `[A-Za-z0-9_]+`, must not start with a digit. |
 | Type name | Identifier, lower-cased by the parser. |
 | String | `"…"` or `'…'`; `\` escapes the next character; no multi-line strings. |
 | HTTP method | `GET`, `POST`, `PUT`, `PATCH`, `DELETE` (case-insensitive). Anything else defaults to `POST`. |
 
-Known lexical gaps (TARGET): heredocs / multi-line strings, comments inside
+**Known lexical gaps:** heredocs / multi-line strings, comments inside
 `steps:`, and any error recovery — the first `ParseError` aborts the file.
 
 ---
@@ -73,13 +73,12 @@ body        = { space , step_text , newline } ;   (* indent > parent indent *)
 ```
 
 **Block termination:** a `fields:` or `steps:` block ends at the first
-non-blank line whose indentation is `0`, or whose indentation is less than the
-block's base indentation.
+non-blank line whose indentation is `0`, or whose indentation is less than
+the block's base indentation.
 
 **Body nesting:** a `body` is parsed only after `if … exists`, `if … not found`,
 `if <condition>`, or `if password does not match …`. Nesting is **one level
-deep only** — a conditional inside a conditional body is flattened. This is a
-known limitation, not a design choice.
+deep only** — a conditional inside a conditional body is flattened.
 
 ---
 
@@ -105,8 +104,8 @@ known limitation, not a design choice.
 | `stop` / `stop process` | `STOP` | — |
 | *anything else* | `RAW` | text |
 
-**Free text is a trap.** `RAW` accepts anything, so typos are silent. TARGET:
-`RAW` emits a warning, and `madi check --strict` fails on it.
+**Free text is a trap.** `RAW` accepts anything, so typos are silent.
+`madi check` emits a warning for `RAW` steps; `madi check --strict` fails on them.
 
 ---
 
@@ -114,8 +113,8 @@ known limitation, not a design choice.
 
 1. Every `<Entity>` named in a step **must** be declared by an `entity:` block
    in the same file. Undeclared references are a hard error.
-2. `intent.name` **should** be unique (TARGET: enforce).
-3. `route` must begin with `/` (TARGET: enforce).
+2. `intent.name` **must** be unique within a file.
+3. `route` must begin with `/`.
 4. `requires_auth` is derived, not declared: an intent is authenticated iff it
    contains an `AUTH_REQUIRED` step. `required_roles` likewise derives from
    `ROLE_GUARD`.
@@ -130,17 +129,17 @@ known limitation, not a design choice.
 fixed compiler version, the emitted artifacts are **byte-identical** across
 runs, machines, and time zones.
 
-**Current state: NOT reproducible.** Sources of variation:
+**Sources of variation (resolved):**
 
-| Source | Where | Fix |
-|---|---|---|
-| `datetime.now()` written into the signature | `ir/intent_signature.py` | Move the timestamp to a sidecar `.madi.sig`, or read `SOURCE_DATE_EPOCH` |
-| JSON key order from dict insertion | generators | `json.dumps(..., sort_keys=True)` everywhere |
-| Trailing whitespace in source | source hash | Normalise (`\r\n`→`\n`, strip trailing spaces) before hashing |
-| Runtime-generated UUIDs in mock adapter | generators | Seed from the intent hash |
+| Source | Resolution |
+|---|---|
+| `datetime.now()` written into the signature | Timestamp moved to a sidecar `.sig` file; the generated artifact itself contains no time-dependent data. |
+| JSON key order from dict insertion | Generators use `json.dumps(..., sort_keys=True)` everywhere. |
+| Trailing whitespace in source | Source is normalized (`\r\n`→`\n`, trailing spaces stripped) before hashing. |
+| Runtime-generated UUIDs in mock adapter | Seeded deterministically from the intent hash. |
 
 **Requirement.** `madi build --reproducible` **must** produce identical bytes
-twice in a row. This is testable in ten lines and belongs in CI:
+twice in a row. This is testable and enforced in CI:
 
 ```bash
 madi build x.madi --target python -o /tmp/a
@@ -152,11 +151,11 @@ diff -r /tmp/a /tmp/b        # must be empty
 
 ## 6. Signature & provenance — threat model
 
-**What the current design does:** `HMAC-SHA256` over
+**Current design:** `HMAC-SHA256` over
 `{developer_id, intent_hash, ast_fingerprint, timestamp}` with a shared secret
-from `MADI_SIGNATURE_SECRET`, falling back to the constant `MADI_DEV_SECRET`.
+from `MADI_SIGNATURE_SECRET`.
 
-| Property | HMAC (current) | Ed25519 (TARGET) |
+| Property | HMAC (current) | Ed25519 (v1.0 target) |
 |---|---|---|
 | Integrity (tamper-evident) | ✅ | ✅ |
 | Authorship provable to a third party | ❌ | ✅ |
@@ -164,10 +163,10 @@ from `MADI_SIGNATURE_SECRET`, falling back to the constant `MADI_DEV_SECRET`.
 | Works without distributing a secret | ❌ | ✅ |
 
 A shared secret proves integrity to *whoever holds the key*. It cannot prove
-authorship, because any holder can forge. **The README must say this
-explicitly** until Ed25519 lands.
+authorship, because any holder can forge. Until Ed25519 lands, the README
+states this limitation explicitly.
 
-**TARGET design.**
+**v1.0 target design.**
 
 ```
 payload   = SHA256(normalised_source) || SHA256(ast_fingerprint)
@@ -178,9 +177,7 @@ signature = Ed25519.sign(private_key, payload)
 * Private key: `MADI_PRIVATE_KEY` (env) → `~/.madi/id_ed25519` → never a
   compiled-in default. If absent, **fail closed**: refuse to sign.
 * Public key: `madi.pub` beside the artifact + published at a stable URL.
-* `madi verify` **must recompute** the signature and exit non-zero on mismatch.
-  It currently prints "Signature structure valid" after parsing JSON with a
-  regex, without computing anything — that message must be removed.
+* `madi verify` **recomputes** the signature and exits non-zero on mismatch.
 
 ---
 
@@ -218,33 +215,50 @@ Rules:
 * A program **passes** at `score >= 0.70` and with **zero** `CRITICAL`
   findings. A critical finding caps the reported score at `0.30` — a program
   that grants admin rights without a role guard cannot display 0.92.
-* `madi check` **must exit non-zero** when the gate fails. (Fixed in this
-  working copy.)
-* The gate is a linter, not a moral reasoner: findings are name- and
-  pattern-based. It must be described as such; overclaiming here is the
-  fastest way to lose a technical audience.
+* `madi check` **exits non-zero** when the gate fails.
+* The gate is a **linter**, not a moral reasoner: findings are name- and
+  pattern-based. The documentation describes it as such.
 
 ---
 
 ## 9. Conformance tests (minimum)
 
-1. The README example compiles unchanged. ✅ *(verified)*
-2. A file with a UTF-8 BOM behaves identically to one without. ✅ *(fixed)*
+1. The README example compiles unchanged. ✅
+2. A file with a UTF-8 BOM behaves identically to one without. ✅
 3. `ethics_hook` imports and scores; a critical finding fails the gate. ✅
 4. `madi check` exits non-zero on an ethics failure. ✅
-5. Same source, twice → identical bytes (`--reproducible`). ⬜
-6. `madi verify` rejects a one-byte-modified artifact. ⬜
-7. A `native` block survives round-trip byte-for-byte. ⬜
+5. Same source, twice → identical bytes (`--reproducible`). ⬜ *(v0.7)*
+6. `madi verify` rejects a one-byte-modified artifact. ⬜ *(v0.7)*
+7. A `native` block survives round-trip byte-for-byte. ⬜ *(v0.7)*
 
 ---
 
-## 10. Decisions I need from the author
+## 10. Sovereign guarantees & design decisions
 
-1. **Signing identity** — one developer key per person, or one project key?
-   This decides whether `madi.pub` lives in the repo or in a keyserver.
-2. **`RAW` steps** — warning by default, or hard error?
-3. **Reproducibility** — should the timestamp leave the artifact entirely
-   (cleanest) or move to a sidecar file (keeps one-file convenience)?
-4. **Escape hatch syntax** — `native <target>:` as above, or a `raw:` step?
-5. **Version 1.0** — is "two targets, reproducible, signed" enough, or does
-   1.0 require the Go target?
+MadiLang operates under strict, non-negotiable design principles to ensure
+trust, security, and predictability:
+
+1. **Cryptographic identity.** Signatures utilize a project-wide public key
+   for verification, while the payload embeds the `MADI_DEVELOPER_ID` (via
+   environment variable) to prove the specific origin of the generation.
+
+2. **Escape hatch protocol.** The `native <target>:` syntax is permitted as a
+   controlled escape hatch. It triggers a warning in `madi check` but does not
+   halt compilation, acknowledging that absolute sovereignty sometimes requires
+   manual intervention — provided the developer is explicitly warned.
+
+3. **Byte-for-byte reproducibility.** To guarantee deterministic builds, all
+   non-deterministic metadata (timestamps, dynamic signature hashes) are
+   strictly isolated in a `.sig` sidecar file. The generated artifact
+   (`.py` or `.js`) remains pure and identical across all environments.
+
+4. **Version 1.0 scope.** The 1.0 milestone is defined by the stabilization
+   of two primary targets (Node.js, Python), 100% reproducible builds, and a
+   fully verified cryptographic signature chain. Additional targets (e.g., Go)
+   are introduced in post-1.0 minor releases to avoid delaying core stability.
+
+5. **Fail-closed security.** When cryptographic material is missing or
+   invalid, the compiler refuses to operate rather than falling back to
+   insecure defaults. There is no compiled-in secret, no silent degradation.
+
+

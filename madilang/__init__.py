@@ -3,7 +3,7 @@
 # ════════════════════════════════════════════════════════════════════════════
 # Author: El Madani El Mkhitar (madani004)
 # Philosophy: Mkhitarian Ontology — Human Intent as Sovereign Layer
-# Status: v0.5.0 • Beta • Mobile-First • Multi-Target • Ethics-by-Default
+# Status: v0.6.0 • Beta • Mobile-First • Multi-Target • Ethics-by-Default
 # ════════════════════════════════════════════════════════════════════════════
 
 """
@@ -15,7 +15,7 @@ secure, ethical, and sovereign infrastructure automatically.
 
 Supported Targets:
     • Node.js / Express / Prisma
-    • Python / FastAPI / Pydantic  ← NEW in v0.5.0
+    • Python / FastAPI / Pydantic
 
 Core Principles (Mkhitarian Philosophy):
     • Clarity over complexity
@@ -31,8 +31,9 @@ Quick Start:
 
 CLI Usage:
     $ madi init my-backend
+    $ madi build src/main.madi --target python  ← NEW in v0.6.0
     $ madi run src/main.madi
-    $ madi doctor                ← NEW in v0.5.0
+    $ madi doctor
     $ madi verify output.js
 
 Links:
@@ -45,7 +46,7 @@ Links:
 # Package Metadata
 # ────────────────────────────────────────────────────────────────────────────
 
-__version__ = "0.5.4"
+__version__ = "0.6.0"
 __author__ = "El Madani El Mkhitar"
 __email__ = "madani004@proton.me"
 __license__ = "MIT"
@@ -73,7 +74,7 @@ __all__ = [
     "IntentSignature",
     "verify_signature",
 
-    # Diagnostics ← NEW in v0.5.0
+    # Diagnostics
     "run_diagnostics",
 
     # Metadata
@@ -120,14 +121,14 @@ def get_banner() -> str:
     """Return the sovereign banner for CLI display."""
     return f"""
 ╔══════════════════════════════════════════════════════════════════╗
-║  🧠 MadiLang v{__version__} — Sovereign Intent Compiler                      ║
-║  👤 Author: {__author__:<47}                                                 ║
-║  📜 License: {__license__:<48}                                               ║
-║                                                                              ║
-║  🏛️ Philosophy: {__philosophy__:<43}                                         ║
-║  🔐 Sovereignty: {__sovereignty__:<40}                                       ║
-║  🛡️ Ethics: {__ethics__:<49}                                                 ║
-║  🎯 Targets: Node.js • Python (FastAPI)                                      ║
+║  🧠 MadiLang v{__version__} — Sovereign Intent Compiler         ║             
+║  👤 Author: {__author__:<47}                                    ║             
+║  📜 License: {__license__:<48}                                  ║             
+║                                                                  ║            
+║  🏛️ Philosophy: {__philosophy__:<43}                            ║             
+║  🔐 Sovereignty: {__sovereignty__:<40}                          ║             
+║  🛡️ Ethics: {__ethics__:<49}                                    ║             
+║  🎯 Targets: Node.js • Python (FastAPI)                         ║             
 ╚══════════════════════════════════════════════════════════════════╝
 """
 

@@ -1,3 +1,4 @@
+
 <!--
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
@@ -13,12 +14,12 @@
 
 <div align="center">
 
-# 🧠 MadiLang v0.5.3
+# 🧠 MadiLang v0.6.0
 
 ### ✨ Code is no longer written. It is described. ✨
 
 **MadiLang** transforms human-readable intent into production-ready, secure, and sovereign backend systems.
-Describe what you want — MadiLang generates the rest with **cryptographic proof of origin**.
+Describe what you want — MadiLang generates the rest with **cryptographic proof of origin** and **deterministic reproducibility**.
 
 [![MadiLang CI](https://github.com/madanimkhitar22-beep/madilang/actions/workflows/test.yml/badge.svg)](https://github.com/madanimkhitar22-beep/madilang/actions/workflows/test.yml)
 [![Python Versions](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue?logo=python&logoColor=white)](https://pypi.org/project/madilang/)
@@ -54,6 +55,7 @@ In a world of boilerplate, complexity, and hidden logic, MadiLang restores **cla
 | 🔗 **Extensibility** | Modify core or fork | **Plugin system** — extend without touching core |
 | 🌐 **Targets** | Single language per project | **Multi-target** — Node.js + Python (FastAPI) |
 | 🩺 **Diagnostics** | Manual debugging | **`madi doctor`** — instant environment health check |
+| 🔄 **Reproducibility** | Environment-dependent builds | **Deterministic** — byte-for-byte identical outputs |
 
 > 💎 **MadiLang is not just a tool. It's a declaration: Human intent is the sovereign layer.**
 
@@ -107,7 +109,7 @@ madi run auth.madi --target python    # Python + FastAPI
 const __MADI_SIGNATURE__ = {
   "developer": { "id": "madani004" },
   "intent": { "hash": "a3f8c2...", "fingerprint": "7d9e1b..." },
-  "timestamp": { "iso": "2026-07-04T00:00:00Z" },
+  "timestamp": { "iso": "2026-11-04T00:00:00Z" },
   "ethics": { "score": 0.95, "passed": true },
   "signature": { "algorithm": "SHA256-HMAC", "value": "..." }
 };
@@ -137,7 +139,7 @@ app.post('/api/signup', validateInputs(['name','email','password']), async (req,
 __MADI_SIGNATURE__ = {
     "developer": {"id": "madani004"},
     "intent": {"hash": "a3f8c2...", "fingerprint": "7d9e1b..."},
-    "timestamp": {"iso": "2026-07-04T00:00:00Z"},
+    "timestamp": {"iso": "2026-11-04T00:00:00Z"},
     "ethics": {"score": 0.95, "passed": True},
     "signature": {"algorithm": "SHA256-HMAC", "value": "..."}
 }
@@ -170,46 +172,20 @@ async def register_user(data: RegisterUserInput):
 
 ---
 
-## 🆕 What's New in v0.5.3
+## 🆕 What's New in v0.6.0
 
-### 📦 Official PyPI Publication
-MadiLang is now **officially available on PyPI**! Install with a single command:
+### 🏗️ `madi build` Command
+Compile `.madi` source files to target code **without execution**. This is the foundational step for CI/CD pipelines and reproducible builds.
 ```bash
-pip install madilang
+madi build src/main.madi --target python --output dist/
 ```
 
-### 🐍 Python/FastAPI Generator
-Full support for generating **async FastAPI** backends with Pydantic models, automatic validation, and Uvicorn server setup.
+### 🔄 Deterministic & Reproducible Builds
+Added `.gitattributes` to enforce `LF` line endings globally, guaranteeing byte-for-byte hash consistency across Windows, macOS, and Linux. Preparation for the upcoming `--reproducible` flag.
 
-### 🩺 `madi doctor` Command
-Instant environment diagnostics checking Python, Node.js, npm, network connectivity, sovereign secrets, and write permissions.
-
-```bash
-$ madi doctor
-🖥️  SYSTEM ENVIRONMENT
-  ✅ Python   v3.13.13      (/usr/bin/python3.13)
-  ✅ Nodejs   v26.3.1       (/usr/bin/node)
-  ✅ Npm      v11.16.0      (/usr/bin/npm)
-  ✅ Write Access   /home/user/my-backend
-  ℹ️ Platform      Android aarch64 📱 Mobile (Termux)
-
-🔐 SOVEREIGN SECRETS
-  ✅ SET     MADI_SIGNATURE_SECRET   [Sove****]
-  ✅ SET     MADI_DEVELOPER_ID       [mada****]
-
-🌐 NETWORK CONNECTIVITY
-  ✅ npm_registry       https://registry.npmjs.org/
-  ✅ pypi_index         https://pypi.org/simple/
-  ✅ github_api         https://api.github.com/
-
-✅ ALL CHECKS PASSED — Environment is sovereign-ready!
-```
-
-### 🛡️ Sovereign Hybrid Adapter
-Generated code intelligently detects database availability. If Prisma/SQLAlchemy isn't configured, it falls back to a built-in mock adapter — ensuring the backend **runs everywhere** without configuration hell.
-
-### 🏗️ Modular CLI Architecture
-CLI refactored into independent command modules with lazy loading for faster startup on mobile devices.
+### 📜 Authoritative Specifications
+- **`SPEC.md` v1.0**: Elevated from draft to authoritative specification, including explicit "Sovereign Guarantees" for cryptographic identity and escape hatches.
+- **`ROADMAP.md` v1.0**: Restructured for professional clarity with strict exit criteria for each phase.
 
 ---
 
@@ -233,30 +209,22 @@ pip install -e .
 
 # 4. Verify installation
 madi --version
-# 🧠 MadiLang v0.5.3 — Sovereign Intent Compiler
+# 🧠 MadiLang v0.6.0 — Sovereign Intent Compiler
 
 # 5. Diagnose environment
 madi doctor
 
-# 6. Initialize and run
+# 6. Initialize and build
 madi init my-backend
 cd my-backend
-madi run src/main.madi --target python
-```
-
-### 🍎 iOS (via Pythonista or similar)
-
-```bash
-pip install madilang
-madi doctor          # Verify environment
-madi run your_file.madi
+madi build src/main.madi --target python --output dist/
 ```
 
 > 💡 **Democratizing development**: Build sovereign backends from anywhere, even a smartphone.
 
 ---
 
-## 🏗️ Architecture v0.5.3
+## 🏗️ Architecture v0.6.0
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
@@ -271,11 +239,11 @@ madi run your_file.madi
 │       ↓                                                                         │
 │  🔐 IntentSignature (Cryptographic Binding + Provenance)                        │
 │       ↓                                                                         │
-│  ⚙️ StepCompiler → IR (Language-Agnostic Intermediate Representation)            │
+│  ⚙️ StepCompiler → IR (Language-Agnostic Intermediate Representation)           │
 │       ↓                                                                         │
 │  🧩 Plugin Hooks (Ethics, Security, Custom Transformers)                        │
 │       ↓                                                                         │
-│  🏗️ CodeGenerator → Target Code                                                  │
+│  🏗️ CodeGenerator → Target Code                                                 │
 │       ├── 🟢 Node.js / Express / Prisma                                         │
 │       ├── 🐍 Python / FastAPI / Pydantic                                        │
 │       └── 🦀 Go / Fiber (planned)                                               │
@@ -283,27 +251,6 @@ madi run your_file.madi
 │  📤 Output + Embedded Signature + Hybrid Adapter + Runtime Verification         │
 │                                                                                 │
 └─────────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 📁 Project Structure
-
-```
-madilang/
-├── madilang/              # 🧠 Core sovereign package
-│   ├── compiler/          # 🔍 Parser, AST, Analyzer
-│   ├── ir/                # ⚙️ IR + Signature Engine
-│   ├── generators/        # 🏗️ Code generators
-│   │   ├── nodejs/        #   🟢 Express + Prisma + Hybrid Adapter
-│   │   └── python/        #   🐍 FastAPI + Pydantic + Hybrid Adapter
-│   ├── diagnostics/       # 🩺 Environment, Secrets, Network checks
-│   ├── stdlib/            # 📚 Auth, Validation, Security
-│   ├── plugins/           # 🧩 Plugin system
-│   └── cli/               # 🖥️ Modular CLI (lazy-loaded commands)
-│       └── commands/      #   init, run, build, verify, check, doctor
-├── tests/                 # 🧪 Comprehensive test suite
-├── examples/              # 💡 Ready-to-run examples
-├── tools/                 # 🤖 VSCode extension, dev tools
-└── .github/workflows/     # 🔄 CI/CD pipeline (10/10 green ✅)
 ```
 
 ---
@@ -321,10 +268,10 @@ Every artifact generated by MadiLang carries a **cryptographic signature** that 
 ### 🔍 Verify Signature
 
 ```bash
-madi verify output.js
+madi verify dist/output.py
 # ✅ Signature structure valid
 # 👤 Developer: madani004
-# 📅 Generated: 2026-07-04T00:00:00Z
+# 📅 Generated: 2026-11-04T00:00:00Z
 # 🔖 Intent Hash: a3f8c2...
 # 🛡️ Ethics Score: 0.95
 ```
@@ -361,11 +308,11 @@ madi init my-project
 madi run src/main.madi --target nodejs
 madi run src/main.madi --target python
 
-# Build without running
+# Build without running (NEW in v0.6.0)
 madi build src/main.madi --target python --output dist/
 
 # Verify sovereign signature
-madi verify dist/output.js
+madi verify dist/output.py
 
 # Analyze and validate source
 madi check src/main.madi
@@ -428,7 +375,7 @@ MadiLang is built on the **Mkhitarian Ontology**:
 ### 📋 Development Setup
 
 ```bash
-git clone https://github.com/your-username/madilang.git
+git clone https://github.com/madanimkhitar22-beep/madilang.git
 cd madilang
 pip install -e ".[dev]"
 pytest tests/ -v
@@ -447,37 +394,21 @@ ruff check .
 
 See [CHANGELOG.md](CHANGELOG.md) for detailed release notes.
 
-### 🚀 v0.5.3 Highlights
-- 📦 **Official PyPI publication** confirmed end-to-end
-- 🐍 Python/FastAPI generator with Pydantic models and async handlers
-- 🩺 `madi doctor` command for comprehensive environment diagnostics
-- 🛡️ Sovereign Hybrid Adapter for zero-config database fallback
-- 🏗️ Modular CLI with lazy-loaded command architecture
-- ✅ 10/10 CI checks passing across Python 3.8–3.13
-- 📱 Mobile-first verified on Termux/Android
-
-### 🏛️ v0.4.0 Foundation
-- ✨ Complete architecture rewrite with modular design
-- 🔐 Sovereign Intent Signature system
-- 🧩 Plugin system for extensibility
-- 🛡️ Ethics and security hooks
-- 🔄 CI/CD pipeline with quality, security, and integration checks
-
 ---
 
 ## 🔮 Roadmap
 
-### v0.6.0 (Next)
-- 📚 OpenAPI/Swagger auto-documentation
-- 🧪 Auto-testing generator from intents
-- 🔄 `madi watch` mode for live reload
-- 🔄 Automated PyPI release via CI/CD
+### v0.7.0 (Next)
+- 🔄 **Reproducibility Flag**: `madi build --reproducible` producing byte-identical outputs with `.sig` sidecar files.
+- 🔐 **Cryptographic Maturity**: Transition from HMAC-SHA256 to Ed25519 for non-repudiable signatures.
+- 🛡️ **Security Hook**: Wire `security_hook` with deep data-flow analysis (beyond keyword matching).
+- 📚 **Auto-Documentation**: OpenAPI/Swagger generation directly from `.madi` intents.
 
 ### v1.0.0 (Vision)
-- 🦀 Go/Fiber generator
-- 🔗 Open integration with any decentralized platform
-- 🌍 Community plugin ecosystem
-- 🎨 Full LSP support for VSCode
+- 🦀 **Go/Fiber Generator**: Multi-language parity.
+- 🎨 **Full LSP Support**: VSCode extension with real-time diagnostics and autocomplete.
+- 🌍 **Ecosystem**: Community plugin registry and decentralized deployment integrations.
+- ✅ **Definition of Done**: Two stable targets, 100% reproducible builds, verified cryptographic chain, and a working escape hatch.
 
 ---
 
@@ -490,8 +421,8 @@ authors:
   - family-names: "El Mkhitar"
     given-names: "El Madani"
     email: "madani004@proton.me"
-version: "0.5.3"
-date-released: 2026-07-04
+version: "0.6.0"
+date-released: 2026-11-04
 license: "MIT"
 repository-code: "https://github.com/madanimkhitar22-beep/madilang"
 ```

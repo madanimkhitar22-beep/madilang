@@ -1,35 +1,21 @@
-# Roadmap
+# MadiLang — Strategic Roadmap
 
-> This is the public plan. The private working notes live outside the
-> repository, so nothing here is a promise that has not been verified.
-> Authoritative rules live in [SPEC.md](SPEC.md); the ethics/signature
-> contracts are in sections 5–8 there.
+> This is the public plan for MadiLang's evolution. Authoritative rules live
+> in [SPEC.md](SPEC.md); the ethics and signature contracts are defined in
+> sections 5–8 there.
 
 ---
 
 ## The one-line goal
 
-**MadiLang is the deterministic, auditable compiler for AI-era backends.**
+**MadiLang is the deterministic, auditable compiler for intent-driven backends.**
 
 Not "describe code and get code" — every chat model does that. The scarce good
 is *reproducibility and provenance*: the same intent produces the same bytes,
-and every artifact can be traced back to the intent that created it, by a third
-party, without trusting the author.
+and every artifact can be traced back to the intent that created it, by a
+third party, without trusting the author.
 
 Every roadmap item below is judged against that sentence.
-
----
-
-## Phase 0 — Foundation (done in the working copy)
-
-- [x] Ethics layer repaired, wired, and gated (`madi check` exits non-zero)
-- [x] `plugins/__init__.py`; 5 regression tests
-- [x] UTF-8 BOM robustness in the parser
-- [x] `SPEC.md` — grammar, determinism contract, threat model, escape hatch
-- [x] One-command verification (`scripts/verify.py`)
-- [ ] First commit on a branch, then a single squash-merge
-
-**Exit criterion:** `python scripts/verify.py` is green from a clean checkout.
 
 ---
 
@@ -37,6 +23,14 @@ Every roadmap item below is judged against that sentence.
 
 Nothing in the README may exceed what the code does.
 
+- [x] Ethics layer repaired, wired, and gated (`madi check` exits non-zero)
+- [x] `plugins/__init__.py`; 5 regression tests
+- [x] UTF-8 BOM robustness in the parser
+- [x] `SPEC.md` — grammar, determinism contract, threat model, escape hatch
+- [x] `ROADMAP.md` — this document
+- [x] One-command verification (`scripts/verify.py`)
+- [x] `madi build` command for compilation without execution
+- [x] `.gitattributes` for cross-platform determinism
 - [ ] Wire `security_hook` the same way the ethics layer was wired
 - [ ] README truth pass: replace "cryptographic proof of origin" with an
       accurate statement until asymmetric signing lands (SPEC §6)
@@ -85,11 +79,11 @@ requires abandoning the language.
 
 ---
 
-## Phase 5 — Ship it
+## Phase 5 — Ship v1.0
 
-- [ ] Version 0.6.0, CHANGELOG, annotated tag, GitHub release
+- [ ] Version 1.0.0, CHANGELOG, annotated tag, GitHub release
 - [ ] PyPI release that actually contains the fixed wheel
-- [ ] The eight Pi Network proposals consolidated under `research/` (one repo,
+- [ ] All conceptual projects consolidated under `research/` (one repo,
       clearly labelled as conceptual) — or moved to a separate repository
 
 **Exit criterion:** one living repository that a reviewer can read in an hour.
